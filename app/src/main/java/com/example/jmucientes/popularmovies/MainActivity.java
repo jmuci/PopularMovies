@@ -1,11 +1,19 @@
 package com.example.jmucientes.popularmovies;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import com.example.jmucientes.popularmovies.model.Movie;
+import com.example.jmucientes.popularmovies.view.MainActivityViewBinder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -13,20 +21,34 @@ import butterknife.ButterKnife;
 /**
  * Main entry point class for the PopularMovies App
  */
-    // TODO(1) Add dependencies: Picasso and Butterknife
-    // TODO(2) Make basic app structure
 
-public class MainActivity extends AppCompatActivity {
+    // TODO Design detailed view
+    // TODO Load movie info into detailed view
+    // TODO Sort the movies
+    // TODO (Opt) Introduce Dagger
+    // TODO (Opt) Load more films
+    // TODO (Opt) Unit Tests
+
+
+public class MainActivity extends AppCompatActivity implements MainActivityViewBinder{
 
     public static final int NUM_COLUMS = 2;
+    private static final String TAG = MainActivity.class.getName();
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    @BindView(R.id.error_dialog_view) View mErrorView;
+    @BindView(R.id.error_msg_tv) TextView mErrorMessageTv;
+    private MoviesAdapter mAdapter;
+    MainActivityPresenter mMainActivityPresenter;
+    List<Movie> mMovieList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        mMainActivityPresenter = new MainActivityPresenter(this);
+        mMainActivityPresenter.requestTopRatedMoviesFromTheMovieDB();
 
         setUpRecyclerView();
     }
@@ -35,28 +57,38 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, NUM_COLUMS));
 
-        mAdapter = new MoviesAdapter(generateFakeMoviesSet());
+        //Initialize DataSet Empty Until the results come.
+        mMovieList = new ArrayList<>(0);
+        mMovieList = getPlaceHolderMovieList();
+        mAdapter = new MoviesAdapter(mMovieList);
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    //TODO Replace with real data
-    private Movie[] generateFakeMoviesSet() {
-        String uri = "https://images-na.ssl-images-amazon.com/images/I/81xTx-LxAPL._SL1500_.jpg";
-        String uri2 = "https://is3-ssl.mzstatic.com/image/thumb/Video128/v4/16/ec/1d/16ec1d49-bd88-f23c-393d-0a850c0ca1c9/contsched.rwjqgfdx.lsr/268x0w.jpg";
-        String uri3 = "https://images-na.ssl-images-amazon.com/images/I/51DT17Z5E7L._SY445_.jpg";
-        return new Movie[]{
-                new Movie(uri),
-                new Movie(uri2),
-                new Movie(uri3),
-                new Movie(uri),
-                new Movie(uri2),
-                new Movie(uri3),
-                new Movie(uri),
-                new Movie(uri2),
-                new Movie(uri3),
-                new Movie(uri),
-                new Movie(uri2),
-                new Movie(uri3)
-        };
+    private List<Movie> getPlaceHolderMovieList() {
+        List<Movie> movieList = new ArrayList<>(6);
+        for (int i = 0; i < 4; i++) {
+            movieList.add(new Movie("", "", 0, "", "", "", "", "", ""));
+        }
+        return movieList;
+    }
+
+    @Override
+    public void updateAdapterContent(List<Movie> movies) {
+        if (movies != null && movies.size() > 0) {
+            mAdapter.updateDataSet(movies);
+        } else {
+            Log.e(TAG, "Error trying to update adapter with response movies");
+        }
+
+    }
+
+    @Override
+    public void showErrorMessage(String msg) {
+        mErrorView.setVisibility(View.VISIBLE);
+        if (TextUtils.isEmpty(msg)) {
+            mErrorMessageTv.setText("Are you offline?");
+        } else {
+            mErrorMessageTv.setText(msg);
+        }
     }
 }

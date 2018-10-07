@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="1dp"
+        android:background="@color/lightGray"
         android:contentDescription="@string/movie_cover_image"/>
 
 </FrameLayout>

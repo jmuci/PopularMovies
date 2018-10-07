@@ -1,9 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<android.support.v7.widget.RecyclerView
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/recycler_view"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"/>
+    android:layout_width="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity"/>
+
+    <LinearLayout
+        android:id="@+id/error_dialog_view"
+        android:visibility="gone"
+        android:minHeight="4dp"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:background="@color/lightGray">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/TextAppearance.AppCompat.Title"
+            android:textColor="@color/colorAccent"
+            android:gravity="center"
+            android:layout_marginBottom="20dp"
+            android:text="@string/error_title"/>
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:src="@android:drawable/ic_dialog_alert"/>
+
+        <TextView
+            android:id="@+id/error_msg_tv"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</FrameLayout>
+
