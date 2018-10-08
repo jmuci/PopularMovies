@@ -18,7 +18,7 @@ import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewHolder> {
 
-    public static final String ADAPTER_POSTION_KEY = "adapter_postion";
+    public static final String MOVIE_KEY = "movie_key";
     private List<Movie> mDataSet;
     private Context mContext;
 
@@ -39,7 +39,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
 
             final Class destinationActivity = MoviesDetails.class;
             Intent intent = new Intent(mContext, destinationActivity);
-            intent.putExtra(ADAPTER_POSTION_KEY, adapterPosition);
+            intent.putExtra(MOVIE_KEY, mDataSet.get(adapterPosition));
             mContext.startActivity(intent);
         }
 

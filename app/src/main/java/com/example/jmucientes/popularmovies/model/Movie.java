@@ -1,10 +1,13 @@
 package com.example.jmucientes.popularmovies.model;
 
-public class Movie {
-    //TODO Remove
-    public Movie(String imageUri) {
-        poster_path = imageUri;
-    }
+import java.io.Serializable;
+
+/**
+ * Represents a movie Object with most relevant fields.
+ * NOTE that implements Serializable, but it should actually implement Parcelable
+ * for performance reasons when Bundling a Movie object to pass it to the DetailsActivity.
+ */
+public class Movie implements Serializable {
 
     public Movie(String vote_average, String backdrop_path, int id, String title, String overview, String original_language, String release_date, String vote_count, String poster_path) {
         this.vote_average = vote_average;

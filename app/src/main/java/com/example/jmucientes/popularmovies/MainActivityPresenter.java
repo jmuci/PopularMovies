@@ -33,7 +33,7 @@ public class MainActivityPresenter {
 
     public void requestTopRatedMoviesFromTheMovieDB() {
 
-        Uri requestUri = Network.buildRequestUri();
+        Uri requestUri = Network.buildRequestUriForTopRatedMovies();
         Single<String> requestObservable = makeMoviesRequest(requestUri);
         Subscription subscription = requestObservable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

@@ -2,4 +2,6 @@
     <string name="app_name">PopularMovies</string>
     <string name="movie_cover_image">Movie cover image</string>
     <string name="error_title">Something went wrong...</string>
+    <string name="movie_image_backdrop">Movie Image Backdrop</string>
+    <string name="user_rating">User rating</string>
 </resources>

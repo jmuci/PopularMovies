@@ -19,13 +19,23 @@ public class Network {
     private static final String API_KEY_PARAM = "api_key";
     private static final String PERSONAL_API_KEY = "0c6313bbf2f22242126a23d1d43f83cd";
     private static final String TAG = Network.class.getName();
-    private static final String POSTER_SIZE_W_185 = "w185";
+    // TODO This should be an ENUM to guarentee a valid size
+    public static final String IMAGE_SIZE_W_185 = "w185";
+    public static final String IMAGE_SIZE_W_342 = "w342";
+    public static final String IMAGE_SIZE_W_500 = "w500";
     private static final String PATH = "t/p";
     private static final String IMAGES_AUTH = "image.tmdb.org";
     private static final String VERSION_SEGMENT = "3";
+    public static final String PAGE_KEY = "page";
+    public static final String DEFAULT_PAGE = "1";
 
     @NonNull
-    public static Uri buildRequestUri() {
+    public static Uri buildRequestUriForTopRatedMovies() {
+        return buildRequestUriForTopRatedMovies(DEFAULT_PAGE);
+    }
+
+    @NonNull
+    public static Uri buildRequestUriForTopRatedMovies(String page){
         //Uri http://api.themoviedb.org/3/movie/top_rated?api_key=0c6313bbf2f22242126a23d1d43f83cd
         Uri.Builder builder = new Uri.Builder();
         return builder.scheme(HTTP_SCHEME)
@@ -34,6 +44,7 @@ public class Network {
                 .appendPath(MOVIE_PATH)
                 .appendPath(TOP_RATED_END_POINT)
                 .appendQueryParameter(API_KEY_PARAM, PERSONAL_API_KEY)
+                .appendQueryParameter(PAGE_KEY, page)
                 .build();
     }
 
@@ -45,6 +56,10 @@ public class Network {
      * @return
      */
     public static Uri getFullyQualifiedImageUri(String imagePath) {
+        return getFullyQualifiedImageUri(imagePath, IMAGE_SIZE_W_185);
+    }
+
+    public static Uri getFullyQualifiedImageUri(String imagePath, String imageSize) {
         if (imagePath.length() > 0 && '/' == (imagePath.charAt(0))) { //Remove extra slash
             imagePath = imagePath.substring(1, imagePath.length());
         }
@@ -52,12 +67,12 @@ public class Network {
         return builder.scheme(HTTP_SCHEME)
                 .authority(IMAGES_AUTH)
                 .path(PATH)
-                .appendPath(POSTER_SIZE_W_185)
+                .appendPath(imageSize)
                 .appendPath(imagePath)
                 .build();
     }
 
-    @Nullable
+        @Nullable
     public static String makeRequest(Uri requestUri) throws IOException {
         final OkHttpClient httpClient = new OkHttpClient();
         Request request = new Request.Builder().url(requestUri.toString()).build();
