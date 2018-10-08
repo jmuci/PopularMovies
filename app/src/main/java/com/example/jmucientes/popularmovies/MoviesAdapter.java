@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +15,13 @@ import com.example.jmucientes.popularmovies.model.Movie;
 import com.example.jmucientes.popularmovies.util.Network;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewHolder> {
 
     public static final String MOVIE_KEY = "movie_key";
+    private static final String TAG = MoviesAdapter.class.getName();
     private List<Movie> mDataSet;
     private Context mContext;
 
@@ -77,4 +80,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         mDataSet = movies;
         notifyDataSetChanged();
     }
+
+    public void appendItemsToDataSet(List<Movie> movies) {
+        mDataSet.addAll(movies);
+        Log.d(TAG, "appendItemsToDataSet() called. New dataSet size: " + mDataSet.size());
+        notifyDataSetChanged();
+    }
+
 }

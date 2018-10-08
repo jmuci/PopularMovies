@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewB
 
         //Initialize DataSet Empty Until the results come.
         mMovieList = new ArrayList<>(0);
-        mMovieList = getPlaceHolderMovieList();
+        //mMovieList = getPlaceHolderMovieList();
         mAdapter = new MoviesAdapter(mMovieList);
         mRecyclerView.setAdapter(mAdapter);
     }
@@ -74,12 +74,20 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewB
 
     @Override
     public void updateAdapterContent(List<Movie> movies) {
+        updateAdapterContent(movies, false);
+    }
+
+    @Override
+    public void updateAdapterContent(List<Movie> movies, boolean appendItemsToDataSet) {
         if (movies != null && movies.size() > 0) {
-            mAdapter.updateDataSet(movies);
+            if (appendItemsToDataSet) {
+                mAdapter.appendItemsToDataSet(movies);
+            } else {
+                mAdapter.updateDataSet(movies);
+            }
         } else {
             Log.e(TAG, "Error trying to update adapter with response movies");
         }
-
     }
 
     @Override

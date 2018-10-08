@@ -55,22 +55,24 @@ public class MoviesDetails extends AppCompatActivity {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void populateUI() {
-        mToolbar.setTitle(mMovie.getTitle());
-        mSynopsisTv.setText(mMovie.getOverview());
-        if (mMovie.getRelease_date().length() > 4) {
-            mReleaseYearTv.setText(mMovie.getRelease_date().substring(0, 4));
-        }
-        mRatingBar.setStepSize(0.25f);
-        mRatingBar.setRating(Float.valueOf(mMovie.getVote_average())/2);
-        mRating.setText(mMovie.getVote_average());
-        Picasso.with(this)
-                .load(Network.getFullyQualifiedImageUri(mMovie.getBackdrop_path(), Network.IMAGE_SIZE_W_500))
-                .error(R.drawable.broken_img)
-                .into(mImageBackdropView);
+        if (mMovie.notEmpty()) {
+            mToolbar.setTitle(mMovie.getTitle());
+            mSynopsisTv.setText(mMovie.getOverview());
+            if (mMovie.getRelease_date().length() > 4) {
+                mReleaseYearTv.setText(mMovie.getRelease_date().substring(0, 4));
+            }
+            mRatingBar.setStepSize(0.25f);
+            mRatingBar.setRating(Float.valueOf(mMovie.getVote_average()) / 2);
+            mRating.setText(mMovie.getVote_average());
+            Picasso.with(this)
+                    .load(Network.getFullyQualifiedImageUri(mMovie.getBackdrop_path(), Network.IMAGE_SIZE_W_500))
+                    .error(R.drawable.broken_img)
+                    .into(mImageBackdropView);
 
-        Picasso.with(this)
-                .load(Network.getFullyQualifiedImageUri(mMovie.getPoster_path()))
-                .error(R.drawable.broken_img)
-                .into(mPosterView);
+            Picasso.with(this)
+                    .load(Network.getFullyQualifiedImageUri(mMovie.getPoster_path()))
+                    .error(R.drawable.broken_img)
+                    .into(mPosterView);
+        }
     }
 }

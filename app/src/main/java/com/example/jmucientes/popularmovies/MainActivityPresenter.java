@@ -33,9 +33,18 @@ public class MainActivityPresenter {
 
     public void requestTopRatedMoviesFromTheMovieDB() {
 
-        Uri requestUri = Network.buildRequestUriForTopRatedMovies();
-        Single<String> requestObservable = makeMoviesRequest(requestUri);
-        Subscription subscription = requestObservable.subscribeOn(Schedulers.io())
+        Uri requestUri = Network.buildRequestUriForTopRatedMovies("1");
+        Uri requestUri2 = Network.buildRequestUriForTopRatedMovies("2");
+        Uri requestUri3 = Network.buildRequestUriForTopRatedMovies("3");
+        Single<String> requestSingle = makeMoviesRequest(requestUri);
+        Single<String> requestSingle2 = makeMoviesRequest(requestUri2);
+        Single<String> requestSingle3 = makeMoviesRequest(requestUri3);
+        //Subscription subscription = requestSingle.subscribeOn(Schedulers.io())
+        Single.merge(
+                requestSingle,
+                requestSingle2,
+                requestSingle3)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<String>() {
                     @Override
@@ -64,7 +73,7 @@ public class MainActivityPresenter {
                             mViewBinderWR.get().showErrorMessage(msg);
                         }
                         if (movieList != null && movieList.size() > 0) {
-                            mViewBinderWR.get().updateAdapterContent(movieList);
+                            mViewBinderWR.get().updateAdapterContent(movieList, true);
                         } else {
                             Log.w(TAG, "The movie list was empty.");
                             mViewBinderWR.get().showErrorMessage("Empty movie list.");

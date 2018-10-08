@@ -1,5 +1,7 @@
 package com.example.jmucientes.popularmovies.model;
 
+import android.text.TextUtils;
+
 import java.io.Serializable;
 
 /**
@@ -137,5 +139,10 @@ public class Movie implements Serializable {
     public String toString()
     {
         return "ClassPojo [vote_average = "+vote_average+", backdrop_path = "+backdrop_path+", id = "+id+", title = "+title+", overview = "+overview+", original_language = "+original_language+", release_date = "+release_date+", vote_count = "+vote_count+", poster_path = "+poster_path+"]";
+    }
+
+    public boolean notEmpty() {
+        return !TextUtils.isEmpty(title) && id != 0 && !TextUtils.isEmpty(poster_path) &&
+                !TextUtils.isEmpty(overview) && !TextUtils.isEmpty(vote_average);
     }
 }
