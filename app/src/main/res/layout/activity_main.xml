@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<merge
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
@@ -35,7 +35,8 @@
             android:layout_height="80dp"
             android:layout_gravity="center"
             android:layout_marginBottom="20dp"
-            android:src="@android:drawable/ic_dialog_alert"/>
+            android:src="@android:drawable/ic_dialog_alert"
+            android:contentDescription="@string/failed_to_download_error_image_content_description" />
 
         <TextView
             android:id="@+id/error_msg_tv"
@@ -46,5 +47,5 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
-</FrameLayout>
+</merge>
 

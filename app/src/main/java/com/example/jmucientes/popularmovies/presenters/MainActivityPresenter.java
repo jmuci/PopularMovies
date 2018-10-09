@@ -1,9 +1,10 @@
-package com.example.jmucientes.popularmovies;
+package com.example.jmucientes.popularmovies.presenters;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.example.jmucientes.popularmovies.MainActivity;
 import com.example.jmucientes.popularmovies.model.Movie;
 import com.example.jmucientes.popularmovies.util.JsonUtils;
 import com.example.jmucientes.popularmovies.util.Network;
@@ -68,7 +69,6 @@ public class MainActivityPresenter {
                         String msg = "onError() called. Error : " + e.getMessage();
                         Log.e(TAG, msg);
                         mViewBinderWR.get().showErrorMessage(msg);
-
                     }
 
                     @Override

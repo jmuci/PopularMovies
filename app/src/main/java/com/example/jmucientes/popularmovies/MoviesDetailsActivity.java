@@ -10,14 +10,16 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.example.jmucientes.popularmovies.adapter.MoviesAdapter;
 import com.example.jmucientes.popularmovies.model.Movie;
+import com.example.jmucientes.popularmovies.presenters.MovieDetailsPresenter;
 import com.example.jmucientes.popularmovies.util.Network;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MoviesDetails extends AppCompatActivity {
+public class MoviesDetailsActivity extends AppCompatActivity {
 
 
     @BindView(R.id.collapsing_toolbar_backdrop)
@@ -66,12 +68,14 @@ public class MoviesDetails extends AppCompatActivity {
             mRating.setText(mMovie.getVote_average());
             Picasso.with(this)
                     .load(Network.getFullyQualifiedImageUri(mMovie.getBackdrop_path(), Network.IMAGE_SIZE_W_500))
-                    .error(R.drawable.broken_img)
+                    .error(R.drawable.baseline_error_black_36)
+                    .placeholder(R.drawable.baseline_cloud_download_black_36)
                     .into(mImageBackdropView);
 
             Picasso.with(this)
                     .load(Network.getFullyQualifiedImageUri(mMovie.getPoster_path()))
-                    .error(R.drawable.broken_img)
+                    .error(R.drawable.baseline_error_black_36)
+                    .placeholder(R.drawable.baseline_cloud_download_black_36)
                     .into(mPosterView);
         }
     }

@@ -1,5 +1,6 @@
 package com.example.jmucientes.popularmovies;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,7 +12,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.jmucientes.popularmovies.adapter.MoviesAdapter;
 import com.example.jmucientes.popularmovies.model.Movie;
+import com.example.jmucientes.popularmovies.presenters.MainActivityPresenter;
 import com.example.jmucientes.popularmovies.util.Network;
 import com.example.jmucientes.popularmovies.view.MainActivityViewBinder;
 
@@ -34,13 +37,17 @@ import butterknife.ButterKnife;
     // TODO (Opt) Unit Tests
     // TODO Screen rotation, save adapter and do not request again
     // TODO Screen rotation: user grid with 3 or 4 columns
+    // TODO Details activity layout fix issue
+    // TODO Add comments.
+    // TODO Extract API key into file
     // TODO Run linter
     // TODO Clean Arch
 
 
 public class MainActivity extends AppCompatActivity implements MainActivityViewBinder{
 
-    public static final int NUM_COLUMS = 2;
+    public static final int NUM_COLUMS_PORTRAIT = 2;
+    public static final int NUM_COLUMS_LANDSCAPE = 4;
     private static final String TAG = MainActivity.class.getName();
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
     @BindView(R.id.error_dialog_view) View mErrorView;
@@ -56,18 +63,29 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewB
         ButterKnife.bind(this);
 
         mMainActivityPresenter = new MainActivityPresenter(this);
-        mMainActivityPresenter.requestTopRatedMoviesFromTheMovieDB();
-
         setUpRecyclerView();
+
+        // If we had saved configuration, restore the dataSet without hiting the backend.
+        List<Movie> retainedDataSet = (List<Movie>) getLastCustomNonConfigurationInstance();
+        if (retainedDataSet != null && retainedDataSet.size() > 0) {
+            mAdapter.updateDataSet(retainedDataSet);
+        } else {
+            mMainActivityPresenter.requestTopRatedMoviesFromTheMovieDB();
+        }
+
     }
 
     private void setUpRecyclerView() {
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this, NUM_COLUMS));
-
+        if (isPortraitScreenConfiguration()) {
+            mRecyclerView.setLayoutManager(new GridLayoutManager(this, NUM_COLUMS_PORTRAIT));
+        } else { // Landscape configuration user more columns.
+            mRecyclerView.setLayoutManager(new GridLayoutManager(this, NUM_COLUMS_LANDSCAPE));
+        }
         //Initialize DataSet Empty Until the results come.
         mMovieList = new ArrayList<>(0);
         mAdapter = new MoviesAdapter(mMovieList);
+
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -127,9 +145,19 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewB
     public void showErrorMessage(String msg) {
         mErrorView.setVisibility(View.VISIBLE);
         if (TextUtils.isEmpty(msg)) {
-            mErrorMessageTv.setText("Are you offline?");
+            mErrorMessageTv.setText(R.string.offline_error_msg);
         } else {
             mErrorMessageTv.setText(msg);
         }
+    }
+
+    @Override
+    public List<Movie> onRetainCustomNonConfigurationInstance() {
+        return mAdapter.getDataSet();
+    }
+
+    public boolean isPortraitScreenConfiguration() {
+        int orientation = getResources().getConfiguration().orientation;
+        return orientation == Configuration.ORIENTATION_PORTRAIT;
     }
 }
