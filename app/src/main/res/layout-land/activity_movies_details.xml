@@ -17,15 +17,10 @@
         android:gravity="top"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical">
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:layout_gravity="center"
                 android:orientation="horizontal">
 
@@ -92,7 +87,6 @@
 
                     <TextView
                         android:id="@+id/synopsis_tv"
-                        android:layout_weight="6"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/medium_padding"
@@ -102,8 +96,6 @@
                 </LinearLayout>
 
             </LinearLayout>
-
-        </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
 

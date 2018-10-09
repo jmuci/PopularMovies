@@ -9,6 +9,4 @@
     <string name="offline_error_msg">Are you offline?</string>
     <string name="failed_to_download_error_image_content_description">Failed to Download Error Image</string>
     <string name="poster_image_of_the_movie">Poster image of the movie</string>
-    <string name="user_rating_land">Rating</string>
-    <string name="release_year_label">Release Year:</string>
 </resources>

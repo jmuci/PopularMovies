@@ -24,26 +24,14 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+// TODO (Opt) Introduce Dagger
+// TODO (Opt) Load more films on Scroll
+// TODO (Opt) Unit Tests
+// TODO Add comments.
+// TODO Run linter
 /**
  * Main entry point class for the PopularMovies App
  */
-
-    // DONE Design detailed view
-    // DONE Load movie info into detailed view
-    // DONE Add menu item
-    // DONE Sort the movies
-    // TODO (Opt) Introduce Dagger
-    // TODO (Opt) Load more films on Scroll
-    // TODO (Opt) Unit Tests
-    // DONE Screen rotation, save adapter and do not request again
-    // DONE Screen rotation: user grid with 3 or 4 columns
-    // TODO Details activity layout fix issue
-    // TODO Add comments.
-    // DONE Extract API key into file
-    // TODO Run linter
-    // TODO Clean Arch
-
-
 public class MainActivity extends AppCompatActivity implements MainActivityViewBinder{
 
     public static final int NUM_COLUMS_PORTRAIT = 2;
