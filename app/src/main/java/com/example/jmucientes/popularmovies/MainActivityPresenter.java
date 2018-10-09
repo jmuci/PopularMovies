@@ -18,7 +18,6 @@ import java.util.concurrent.Callable;
 
 import rx.Single;
 import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -26,20 +25,32 @@ public class MainActivityPresenter {
     private static final String TAG  = MainActivity.class.getName();
 
     private WeakReference<MainActivityViewBinder> mViewBinderWR;
+    private String mCurrentSortOption;
 
     public MainActivityPresenter(MainActivityViewBinder viewBinder) {
         mViewBinderWR = new WeakReference<>(viewBinder);
     }
 
     public void requestTopRatedMoviesFromTheMovieDB() {
+        mCurrentSortOption = Network.TOP_RATED_END_POINT;
+        Uri requestUri = Network.buildRequestUriForMoviesWithEndPoint(Network.TOP_RATED_END_POINT, "1");
+        Uri requestUri2 = Network.buildRequestUriForMoviesWithEndPoint(Network.TOP_RATED_END_POINT,"2");
+        Uri requestUri3 = Network.buildRequestUriForMoviesWithEndPoint(Network.TOP_RATED_END_POINT,"3");
+        executeBackgroundNetworkRequest(requestUri, requestUri2, requestUri3);
+    }
 
-        Uri requestUri = Network.buildRequestUriForTopRatedMovies("1");
-        Uri requestUri2 = Network.buildRequestUriForTopRatedMovies("2");
-        Uri requestUri3 = Network.buildRequestUriForTopRatedMovies("3");
-        Single<String> requestSingle = makeMoviesRequest(requestUri);
-        Single<String> requestSingle2 = makeMoviesRequest(requestUri2);
-        Single<String> requestSingle3 = makeMoviesRequest(requestUri3);
-        //Subscription subscription = requestSingle.subscribeOn(Schedulers.io())
+    public void requestMostPopularMoviesFromTheMovieDB() {
+        mCurrentSortOption = Network.MOST_POPULAR_END_POINT;
+        Uri requestUri = Network.buildRequestUriForMoviesWithEndPoint(Network.MOST_POPULAR_END_POINT, "1");
+        Uri requestUri2 = Network.buildRequestUriForMoviesWithEndPoint(Network.MOST_POPULAR_END_POINT,"2");
+        Uri requestUri3 = Network.buildRequestUriForMoviesWithEndPoint(Network.MOST_POPULAR_END_POINT, "3");
+        executeBackgroundNetworkRequest(requestUri, requestUri2, requestUri3);
+    }
+
+    private void executeBackgroundNetworkRequest(Uri requestUri, Uri requestUri2, Uri requestUri3) {
+        Single<String> requestSingle = makeMoviesRequestSingleObvservable(requestUri);
+        Single<String> requestSingle2 = makeMoviesRequestSingleObvservable(requestUri2);
+        Single<String> requestSingle3 = makeMoviesRequestSingleObvservable(requestUri3);
         Single.merge(
                 requestSingle,
                 requestSingle2,
@@ -84,8 +95,7 @@ public class MainActivityPresenter {
     }
 
 
-
-    private Single<String> makeMoviesRequest(@NonNull final Uri requestUri) {
+    private Single<String> makeMoviesRequestSingleObvservable(@NonNull final Uri requestUri) {
         return Single.fromCallable(new Callable<String>() {
             @Override
             public String call() throws Exception {
@@ -100,4 +110,9 @@ public class MainActivityPresenter {
             }
         });
     }
+
+    public String getCurrentSortOption() {
+        return mCurrentSortOption;
+    }
+
 }

@@ -6,10 +6,13 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.jmucientes.popularmovies.model.Movie;
+import com.example.jmucientes.popularmovies.util.Network;
 import com.example.jmucientes.popularmovies.view.MainActivityViewBinder;
 
 import java.util.ArrayList;
@@ -22,12 +25,17 @@ import butterknife.ButterKnife;
  * Main entry point class for the PopularMovies App
  */
 
-    // TODO Design detailed view
-    // TODO Load movie info into detailed view
-    // TODO Sort the movies
+    // DONE Design detailed view
+    // DONE Load movie info into detailed view
+    // DONE Add menu item
+    // DONE Sort the movies
     // TODO (Opt) Introduce Dagger
-    // TODO (Opt) Load more films
+    // TODO (Opt) Load more films on Scroll
     // TODO (Opt) Unit Tests
+    // TODO Screen rotation, save adapter and do not request again
+    // TODO Screen rotation: user grid with 3 or 4 columns
+    // TODO Run linter
+    // TODO Clean Arch
 
 
 public class MainActivity extends AppCompatActivity implements MainActivityViewBinder{
@@ -59,18 +67,43 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewB
 
         //Initialize DataSet Empty Until the results come.
         mMovieList = new ArrayList<>(0);
-        //mMovieList = getPlaceHolderMovieList();
         mAdapter = new MoviesAdapter(mMovieList);
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    private List<Movie> getPlaceHolderMovieList() {
-        List<Movie> movieList = new ArrayList<>(6);
-        for (int i = 0; i < 4; i++) {
-            movieList.add(new Movie("", "", 0, "", "", "", "", "", ""));
-        }
-        return movieList;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_activity_menu, menu);
+        return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.open_order_most_pop) {
+            if (!mMainActivityPresenter.getCurrentSortOption().equals(Network.MOST_POPULAR_END_POINT)) {
+                mAdapter.clearDataSetWithoutNotifyDataSetChanged();
+                mMainActivityPresenter.requestMostPopularMoviesFromTheMovieDB();
+            }
+            return true;
+        }
+
+        if (id == R.id.order_top_movies) {
+            if (!mMainActivityPresenter.getCurrentSortOption().equals(Network.TOP_RATED_END_POINT)) {
+                mAdapter.clearDataSetWithoutNotifyDataSetChanged();
+                mMainActivityPresenter.requestTopRatedMoviesFromTheMovieDB();
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * View Binder Implementation
+     * @param movies
+     */
 
     @Override
     public void updateAdapterContent(List<Movie> movies) {

@@ -15,7 +15,8 @@ public class Network {
     private static final String HTTP_SCHEME = "http";
     private static final String API_THEMOVIEDB_AUTHORITY = "api.themoviedb.org";
     private static final String MOVIE_PATH = "movie";
-    private static final String TOP_RATED_END_POINT = "top_rated";
+    public static final String TOP_RATED_END_POINT = "top_rated";
+    public static final String MOST_POPULAR_END_POINT = "popular";
     private static final String API_KEY_PARAM = "api_key";
     private static final String PERSONAL_API_KEY = "0c6313bbf2f22242126a23d1d43f83cd";
     private static final String TAG = Network.class.getName();
@@ -27,22 +28,22 @@ public class Network {
     private static final String IMAGES_AUTH = "image.tmdb.org";
     private static final String VERSION_SEGMENT = "3";
     public static final String PAGE_KEY = "page";
-    public static final String DEFAULT_PAGE = "1";
+    public static final String DEFAULT_TO_FIRST_PAGE = "1";
 
     @NonNull
-    public static Uri buildRequestUriForTopRatedMovies() {
-        return buildRequestUriForTopRatedMovies(DEFAULT_PAGE);
+    public static Uri buildRequestUriForMoviesWithEndPoint(String endPoint) {
+        return buildRequestUriForMoviesWithEndPoint(endPoint, DEFAULT_TO_FIRST_PAGE);
     }
 
     @NonNull
-    public static Uri buildRequestUriForTopRatedMovies(String page){
+    public static Uri buildRequestUriForMoviesWithEndPoint(String endPoint, String page){
         //Uri http://api.themoviedb.org/3/movie/top_rated?api_key=0c6313bbf2f22242126a23d1d43f83cd
         Uri.Builder builder = new Uri.Builder();
         return builder.scheme(HTTP_SCHEME)
                 .authority(API_THEMOVIEDB_AUTHORITY)
                 .appendPath(VERSION_SEGMENT)
                 .appendPath(MOVIE_PATH)
-                .appendPath(TOP_RATED_END_POINT)
+                .appendPath(endPoint)
                 .appendQueryParameter(API_KEY_PARAM, PERSONAL_API_KEY)
                 .appendQueryParameter(PAGE_KEY, page)
                 .build();

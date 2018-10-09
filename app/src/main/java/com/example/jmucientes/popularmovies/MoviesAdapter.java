@@ -87,4 +87,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         notifyDataSetChanged();
     }
 
+    public void clearDataSetWithoutNotifyDataSetChanged() {
+        mDataSet.clear();
+    }
+
+
 }
