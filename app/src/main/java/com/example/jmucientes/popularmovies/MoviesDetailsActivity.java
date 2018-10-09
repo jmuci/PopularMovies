@@ -3,12 +3,16 @@ package com.example.jmucientes.popularmovies;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jmucientes.popularmovies.adapter.MoviesAdapter;
 import com.example.jmucientes.popularmovies.model.Movie;
@@ -53,6 +57,15 @@ public class MoviesDetailsActivity extends AppCompatActivity {
             mMovie = (Movie) startingIntent.getSerializableExtra(MoviesAdapter.MOVIE_KEY);
             populateUI();
         }
+
+        AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
+        setUpToolBar();
+        appBarLayout.setMinimumHeight(R.dimen.event_entity_appbar_height);
+    }
+
+    private void setUpToolBar() {
+        Toolbar toolbar = findViewById(R.id.collapsing_toolbar);
+        setSupportActionBar(toolbar);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

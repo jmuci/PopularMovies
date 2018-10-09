@@ -8,7 +8,20 @@
         <item name="colorAccent">@color/gold</item>
     </style>
 
+    <style name="AppThemeNoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/gold</item>
+    </style>
+
     <style name="RatingBar" parent="Widget.AppCompat.RatingBar.Small">
+        <item name="colorControlNormal">@color/lightGray</item>
+        <item name="colorAccent">@color/gold</item>
+        <item name="colorControlActivated">@color/gold</item>
+    </style>
+
+    <style name="RatingBarBig" parent="Widget.AppCompat.RatingBar.Indicator">
         <item name="colorControlNormal">@color/lightGray</item>
         <item name="colorAccent">@color/gold</item>
         <item name="colorControlActivated">@color/gold</item>
@@ -24,6 +37,19 @@
     </style>
 
     <style name="SidePadding.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SideBigPadding" >
+        <item name="android:paddingStart">@dimen/big_padding</item>
+        <item name="android:paddingLeft">@dimen/big_padding</item>
+        <item name="android:paddingRight">@dimen/big_padding</item>
+        <item name="android:paddingEnd">@dimen/big_padding</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="SideBigPadding.Bold">
         <item name="android:textStyle">bold</item>
     </style>
 

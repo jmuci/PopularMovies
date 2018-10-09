@@ -7,6 +7,14 @@ The app simply displays a list of movies that the user can choose to rank by mos
 ## Android Setup
 
 This project consists of a single module. Open the app in Android Studio, fire up and Emulator or Device, build the code and intall the APK.
+
+To hit the Movies BD end point, you will need to create an account at their site and get an API key. 
+Once you have the API key paste it in the gradle.properties file in the root of your project in the variable PopularMovies_TheMovieDB_API_KEY
+
+----
+PopularMovies_TheMovieDB_API_KEY="<your_api_key>"
+----
+
 Or on the command line:
 ----
 ./gradlew installDebug

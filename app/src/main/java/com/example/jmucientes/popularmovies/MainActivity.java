@@ -35,11 +35,11 @@ import butterknife.ButterKnife;
     // TODO (Opt) Introduce Dagger
     // TODO (Opt) Load more films on Scroll
     // TODO (Opt) Unit Tests
-    // TODO Screen rotation, save adapter and do not request again
-    // TODO Screen rotation: user grid with 3 or 4 columns
+    // DONE Screen rotation, save adapter and do not request again
+    // DONE Screen rotation: user grid with 3 or 4 columns
     // TODO Details activity layout fix issue
     // TODO Add comments.
-    // TODO Extract API key into file
+    // DONE Extract API key into file
     // TODO Run linter
     // TODO Clean Arch
 

@@ -84,7 +84,11 @@ public class MainActivityPresenter {
                             mViewBinderWR.get().showErrorMessage(msg);
                         }
                         if (movieList != null && movieList.size() > 0) {
-                            mViewBinderWR.get().updateAdapterContent(movieList, true);
+                            if (mViewBinderWR.get() != null) {
+                                mViewBinderWR.get().updateAdapterContent(movieList, true);
+                            } else {
+                                Log.e(TAG, "View binder is null! The activity was destroyed before the results arrive?");
+                            }
                         } else {
                             Log.w(TAG, "The movie list was empty.");
                             mViewBinderWR.get().showErrorMessage("Empty movie list.");

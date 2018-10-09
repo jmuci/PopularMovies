@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.example.jmucientes.popularmovies.BuildConfig;
+
 import java.io.IOException;
 
 import okhttp3.OkHttpClient;
@@ -18,7 +20,7 @@ public class Network {
     public static final String TOP_RATED_END_POINT = "top_rated";
     public static final String MOST_POPULAR_END_POINT = "popular";
     private static final String API_KEY_PARAM = "api_key";
-    private static final String PERSONAL_API_KEY = "0c6313bbf2f22242126a23d1d43f83cd";
+    private static final String PERSONAL_API_KEY = BuildConfig.TheMovieApiKey;
     private static final String TAG = Network.class.getName();
     // TODO This should be an ENUM to guarentee a valid size
     public static final String IMAGE_SIZE_W_185 = "w185";
