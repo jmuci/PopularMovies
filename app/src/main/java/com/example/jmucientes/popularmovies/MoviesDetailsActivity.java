@@ -1,28 +1,29 @@
 package com.example.jmucientes.popularmovies;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.jmucientes.popularmovies.adapter.MoviesAdapter;
 import com.example.jmucientes.popularmovies.model.Movie;
-import com.example.jmucientes.popularmovies.presenters.MovieDetailsPresenter;
 import com.example.jmucientes.popularmovies.util.Network;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * This class is responsible for showing the details of the Movie.
+ * It has a different layout for landscape mode.
+ * The layout defines a collapsing toolbar, where the collapsing toolbar is decorated
+ * with a backdrop image from the movie.
+ */
 public class MoviesDetailsActivity extends AppCompatActivity {
 
 
@@ -43,7 +44,6 @@ public class MoviesDetailsActivity extends AppCompatActivity {
     RatingBar mRatingBar;
 
     Movie mMovie;
-    MovieDetailsPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,6 @@ public class MoviesDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movies_details);
         ButterKnife.bind(this);
 
-        mPresenter = new MovieDetailsPresenter(this);
         Intent startingIntent = getIntent();
         if (startingIntent != null && startingIntent.getSerializableExtra(MoviesAdapter.MOVIE_KEY) != null) {
             mMovie = (Movie) startingIntent.getSerializableExtra(MoviesAdapter.MOVIE_KEY);
@@ -68,7 +67,6 @@ public class MoviesDetailsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void populateUI() {
         if (mMovie.notEmpty()) {
             mToolbar.setTitle(mMovie.getTitle());
@@ -79,14 +77,16 @@ public class MoviesDetailsActivity extends AppCompatActivity {
             mRatingBar.setStepSize(0.25f);
             mRatingBar.setRating(Float.valueOf(mMovie.getVote_average()) / 2);
             mRating.setText(mMovie.getVote_average());
+            // Set back drop image with Higher Resolution
             Picasso.with(this)
                     .load(Network.getFullyQualifiedImageUri(mMovie.getBackdrop_path(), Network.IMAGE_SIZE_W_500))
                     .error(R.drawable.baseline_error_black_36)
                     .placeholder(R.drawable.baseline_cloud_download_black_36)
                     .into(mImageBackdropView);
 
+            // Set poster image in Detailed view with Higher Resolution
             Picasso.with(this)
-                    .load(Network.getFullyQualifiedImageUri(mMovie.getPoster_path()))
+                    .load(Network.getFullyQualifiedImageUri(mMovie.getPoster_path(), Network.IMAGE_SIZE_W_500))
                     .error(R.drawable.baseline_error_black_36)
                     .placeholder(R.drawable.baseline_cloud_download_black_36)
                     .into(mPosterView);

@@ -22,16 +22,27 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+import static android.support.v4.util.Preconditions.checkNotNull;
+
+/**
+ * This class will take care of generating and executing the network requests to the Movie DB
+ * using RX Java libraries.
+ * Once the the results are obtained, the Suscriber's onNext() will be called, the String response
+ * will be parsed and set as the Adapter's dataSet.
+ */
 public class MainActivityPresenter {
     private static final String TAG  = MainActivity.class.getName();
 
     private WeakReference<MainActivityViewBinder> mViewBinderWR;
     private String mCurrentSortOption;
 
-    public MainActivityPresenter(MainActivityViewBinder viewBinder) {
-        mViewBinderWR = new WeakReference<>(viewBinder);
+    public MainActivityPresenter(@NonNull MainActivityViewBinder viewBinder) {
+        mViewBinderWR = new WeakReference<>(checkNotNull(viewBinder));
     }
 
+    /**
+     * Executes a request to the Top Rated end point.
+     */
     public void requestTopRatedMoviesFromTheMovieDB() {
         mCurrentSortOption = Network.TOP_RATED_END_POINT;
         Uri requestUri = Network.buildRequestUriForMoviesWithEndPoint(Network.TOP_RATED_END_POINT, "1");
@@ -40,6 +51,9 @@ public class MainActivityPresenter {
         executeBackgroundNetworkRequest(requestUri, requestUri2, requestUri3);
     }
 
+    /**
+     * Executes a request to the most popular end point.
+     */
     public void requestMostPopularMoviesFromTheMovieDB() {
         mCurrentSortOption = Network.MOST_POPULAR_END_POINT;
         Uri requestUri = Network.buildRequestUriForMoviesWithEndPoint(Network.MOST_POPULAR_END_POINT, "1");
@@ -52,11 +66,12 @@ public class MainActivityPresenter {
         Single<String> requestSingle = makeMoviesRequestSingleObvservable(requestUri);
         Single<String> requestSingle2 = makeMoviesRequestSingleObvservable(requestUri2);
         Single<String> requestSingle3 = makeMoviesRequestSingleObvservable(requestUri3);
+        // Request the 3 first pages and merge the response.
         Single.merge(
                 requestSingle,
                 requestSingle2,
                 requestSingle3)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io()) // Run on the background.
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<String>() {
                     @Override

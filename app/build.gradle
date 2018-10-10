@@ -23,7 +23,8 @@ android {
     productFlavors {
     }
     lintOptions {
-        disable 'GoogleAppIndexingWarning','ObsoleteLintCustomCheck','IconLocation'
+        disable 'GoogleAppIndexingWarning','ObsoleteLintCustomCheck','IconLocation', 'RestrictedApi'
+
     }
 }
 

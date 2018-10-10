@@ -20,6 +20,11 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+/**
+ * Adapter class with all the movies that are retrieved from the Movie DB
+ * for a given endpoint.
+ * The DataSet will be preserved when the screen Rotates.
+ */
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewHolder> {
 
     public static final String MOVIE_KEY = "movie_key";
@@ -31,7 +36,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
 
         ImageView mImageView;
 
-        MovieViewHolder(View itemView) {
+        MovieViewHolder(@NonNull View itemView) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.item_image);
             itemView.setOnClickListener(this);

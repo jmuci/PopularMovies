@@ -25,12 +25,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 // TODO (Opt) Introduce Dagger
-// TODO (Opt) Load more films on Scroll
+// TODO (Opt) Load more films on Scroll https://medium.com/@programmerasi/how-to-implement-load-more-in-recyclerview-3c6358297f4
 // TODO (Opt) Unit Tests
-// TODO Add comments.
-// TODO Run linter
 /**
- * Main entry point class for the PopularMovies App
+ * Main entry point class for the PopularMovies App.
+ * In this class mainly the updating of views is dealt with.
  */
 public class MainActivity extends AppCompatActivity implements MainActivityViewBinder{
 
@@ -53,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewB
         mMainActivityPresenter = new MainActivityPresenter(this);
         setUpRecyclerView();
 
-        // If we had saved configuration, restore the dataSet without hiting the backend.
+        // If we had saved configuration, restore the dataSet without hitting the backend.
         List<Movie> retainedDataSet = (List<Movie>) getLastCustomNonConfigurationInstance();
         if (retainedDataSet != null && retainedDataSet.size() > 0) {
             mAdapter.updateDataSet(retainedDataSet);
@@ -88,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewB
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
+        // To optimize, we only send a request if the user clicks on a different sort mode.
         if (id == R.id.open_order_most_pop) {
             if (!mMainActivityPresenter.getCurrentSortOption().equals(Network.MOST_POPULAR_END_POINT)) {
                 mAdapter.clearDataSetWithoutNotifyDataSetChanged();
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewB
 
     /**
      * View Binder Implementation
-     * @param movies
+     * ------------------------------
      */
 
     @Override
@@ -141,10 +141,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewB
 
     @Override
     public List<Movie> onRetainCustomNonConfigurationInstance() {
+        // We save the whole dataSet in case of a config change to minimize the amount of backend requests.
         return mAdapter.getDataSet();
     }
 
-    public boolean isPortraitScreenConfiguration() {
+    private boolean isPortraitScreenConfiguration() {
         int orientation = getResources().getConfiguration().orientation;
         return orientation == Configuration.ORIENTATION_PORTRAIT;
     }

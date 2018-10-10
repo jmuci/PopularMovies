@@ -17,28 +17,46 @@ public class Network {
     private static final String HTTP_SCHEME = "http";
     private static final String API_THEMOVIEDB_AUTHORITY = "api.themoviedb.org";
     private static final String MOVIE_PATH = "movie";
-    public static final String TOP_RATED_END_POINT = "top_rated";
-    public static final String MOST_POPULAR_END_POINT = "popular";
+
     private static final String API_KEY_PARAM = "api_key";
     private static final String PERSONAL_API_KEY = BuildConfig.TheMovieApiKey;
     private static final String TAG = Network.class.getName();
+    private static final String PATH = "t/p";
+    private static final String IMAGES_AUTH = "image.tmdb.org";
+    private static final String VERSION_SEGMENT = "3";
+
+    public static final String PAGE_KEY = "page";
+    public static final String DEFAULT_TO_FIRST_PAGE = "1";
+
     // TODO This should be an ENUM to guarentee a valid size
     public static final String IMAGE_SIZE_W_185 = "w185";
     public static final String IMAGE_SIZE_W_342 = "w342";
     public static final String IMAGE_SIZE_W_500 = "w500";
-    private static final String PATH = "t/p";
-    private static final String IMAGES_AUTH = "image.tmdb.org";
-    private static final String VERSION_SEGMENT = "3";
-    public static final String PAGE_KEY = "page";
-    public static final String DEFAULT_TO_FIRST_PAGE = "1";
 
+    public static final String TOP_RATED_END_POINT = "top_rated";
+    public static final String MOST_POPULAR_END_POINT = "popular";
+
+
+    /**
+     * This method will build a complete URI to hit either the top movies or the popular movies end point.
+     * It will default to just requesting the first page.
+     * @param endPoint String
+     * @return full Uri
+     */
     @NonNull
-    public static Uri buildRequestUriForMoviesWithEndPoint(String endPoint) {
+    public static Uri buildRequestUriForMoviesWithEndPoint(@NonNull String endPoint) {
         return buildRequestUriForMoviesWithEndPoint(endPoint, DEFAULT_TO_FIRST_PAGE);
     }
 
+    /**
+     * This method will build a complete URI to hit either the top movies or the popular movies end point.
+     * It will also take the results page as parameter..
+     * @param endPoint String
+     * @param page String
+     * @return full Uri
+     */
     @NonNull
-    public static Uri buildRequestUriForMoviesWithEndPoint(String endPoint, String page){
+    public static Uri buildRequestUriForMoviesWithEndPoint(@NonNull String endPoint, @NonNull String page){
         //Uri http://api.themoviedb.org/3/movie/top_rated?api_key=0c6313bbf2f22242126a23d1d43f83cd
         Uri.Builder builder = new Uri.Builder();
         return builder.scheme(HTTP_SCHEME)
@@ -55,14 +73,16 @@ public class Network {
      * The base URL will look like: http://image.tmdb.org/t/p/.
      * Then you will need a ‘size’, which will be one of the following: "w92", "w154", "w185", "w342", "w500", "w780", or "original". For most phones we recommend using “w185”.
      * And finally the poster path returned by the query, in this case “/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg”
-     * @param imagePath
-     * @return
+     * @param imagePath String
+     * @return Uri
      */
-    public static Uri getFullyQualifiedImageUri(String imagePath) {
+    @NonNull
+    public static Uri getFullyQualifiedImageUri(@NonNull String imagePath) {
         return getFullyQualifiedImageUri(imagePath, IMAGE_SIZE_W_185);
     }
 
-    public static Uri getFullyQualifiedImageUri(String imagePath, String imageSize) {
+    @NonNull
+    public static Uri getFullyQualifiedImageUri(@NonNull String imagePath, @NonNull String imageSize) {
         if (imagePath.length() > 0 && '/' == (imagePath.charAt(0))) { //Remove extra slash
             imagePath = imagePath.substring(1, imagePath.length());
         }
@@ -75,8 +95,18 @@ public class Network {
                 .build();
     }
 
-        @Nullable
-    public static String makeRequest(Uri requestUri) throws IOException {
+    /**
+     * Make a network request using the requestUri using OkHttp client.
+     * This method shouldn't be run on the Main Thread.
+     *
+     * If the request fails, it will log an error and return null.
+     *
+     * @param requestUri String
+     * @return response String
+     * @throws IOException
+     */
+    @Nullable
+    public static String makeRequest(@NonNull Uri requestUri) throws IOException {
         final OkHttpClient httpClient = new OkHttpClient();
         Request request = new Request.Builder().url(requestUri.toString()).build();
         Response response =  httpClient.newCall(request).execute();
