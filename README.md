@@ -4,6 +4,12 @@ Popular Movies is an app developed as part of the [Udacity Android Nanodegree](h
 This is the first of many project. The assignment just provides the requirements of the app with no code given from the beginingso it is up to the developer (me) to make the right design choices.
 The app simply displays a list of movies that the user can choose to rank by most popular or to rated.
 
+<img src="demo_images/pop_movies_screnshot1.png" data-canonical-src="demo_images/pop_movies_screnshot1.png" width="250"  />
+<img src="demo_images/pop_movies_screnshot2.png" data-canonical-src="demo_images/pop_movies_screnshot2.png" width="250"  />
+<img src="demo_images/pop_movies_screnshot_land1.png" data-canonical-src="demo_images/pop_movies_screnshot_land1.png" width="250"  />
+<img src="demo_images/pop_movies_screnshot-land2.png" data-canonical-src="demo_images/pop_movies_screnshot-land2.png" width="250"  />
+
+
 ## Android Setup
 
 This project consists of a single module. Open the app in Android Studio, fire up and Emulator or Device, build the code and intall the APK.
@@ -11,14 +17,14 @@ This project consists of a single module. Open the app in Android Studio, fire u
 To hit the Movies BD end point, you will need to create an account at their site and get an API key. 
 Once you have the API key paste it in the gradle.properties file in the root of your project in the variable PopularMovies_TheMovieDB_API_KEY
 
-----
+```
 PopularMovies_TheMovieDB_API_KEY="<your_api_key>"
-----
+```
 
 Or on the command line:
-----
+```
 ./gradlew installDebug
----- 
+``` 
 
 ## Architecture 
 
