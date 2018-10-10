@@ -4,10 +4,23 @@ Popular Movies is an app developed as part of the [Udacity Android Nanodegree](h
 This is the first of many project. The assignment just provides the requirements of the app with no code given from the beginingso it is up to the developer (me) to make the right design choices.
 The app simply displays a list of movies that the user can choose to rank by most popular or to rated.
 
-<img src="demo_images/pop_movies_screnshot1.png" data-canonical-src="demo_images/pop_movies_screnshot1.png" width="250"  />
-<img src="demo_images/pop_movies_screnshot2.png" data-canonical-src="demo_images/pop_movies_screnshot2.png" width="250"  />
-<img src="demo_images/pop_movies_screnshot_land1.png" data-canonical-src="demo_images/pop_movies_screnshot_land1.png" width="250"  />
-<img src="demo_images/pop_movies_screnshot-land2.png" data-canonical-src="demo_images/pop_movies_screnshot-land2.png" width="250"  />
+### Screenshots - Portrait
+
+Here is how the app looks in portrait mode. 
+
+<p float="left">
+  <img src="demo_images/pop_movies_screnshot1.png" height="450">
+  <img src="demo_images/pop_movies_screnshot2.png" height="450"/>
+</p>
+
+### Screenshots - Landscape
+
+Here is how it looks in landscape mode.
+
+<p float="left">
+  <img src="demo_images/pop_movies_screnshot_land1.png" width="500"/>
+  <img src="demo_images/pop_movies_screnshot-land2.png" width="500"/>
+</p>
 
 
 ## Android Setup
