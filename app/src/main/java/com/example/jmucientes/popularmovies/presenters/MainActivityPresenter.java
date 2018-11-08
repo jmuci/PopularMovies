@@ -17,6 +17,8 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import javax.inject.Inject;
+
 import rx.Single;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -36,6 +38,7 @@ public class MainActivityPresenter {
     private WeakReference<MainActivityViewBinder> mViewBinderWR;
     private String mCurrentSortOption;
 
+    @Inject
     public MainActivityPresenter(@NonNull MainActivityViewBinder viewBinder) {
         mViewBinderWR = new WeakReference<>(checkNotNull(viewBinder));
     }

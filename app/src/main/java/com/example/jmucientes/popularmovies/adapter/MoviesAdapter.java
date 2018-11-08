@@ -20,6 +20,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * Adapter class with all the movies that are retrieved from the Movie DB
  * for a given endpoint.
@@ -55,6 +57,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
 
 
     }
+
+    @Inject
     public MoviesAdapter(List <Movie> dataSet) {
         mDataSet = dataSet;
     }

@@ -21,8 +21,11 @@ import com.example.jmucientes.popularmovies.view.MainActivityViewBinder;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.android.AndroidInjection;
 
 // TODO (Opt) Introduce Dagger
 // TODO (Opt) Load more films on Scroll https://medium.com/@programmerasi/how-to-implement-load-more-in-recyclerview-3c6358297f4
@@ -31,7 +34,7 @@ import butterknife.ButterKnife;
  * Main entry point class for the PopularMovies App.
  * In this class mainly the updating of views is dealt with.
  */
-public class MainActivity extends AppCompatActivity implements MainActivityViewBinder{
+public class MainActivity extends AppCompatActivity implements MainActivityViewBinder {
 
     public static final int NUM_COLUMS_PORTRAIT = 2;
     public static final int NUM_COLUMS_LANDSCAPE = 4;
@@ -39,17 +42,21 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewB
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
     @BindView(R.id.error_dialog_view) View mErrorView;
     @BindView(R.id.error_msg_tv) TextView mErrorMessageTv;
-    private MoviesAdapter mAdapter;
+
+    @Inject
+    MoviesAdapter mAdapter;
+    @Inject
     MainActivityPresenter mMainActivityPresenter;
-    List<Movie> mMovieList;
+    //List<Movie> mMovieList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        mMainActivityPresenter = new MainActivityPresenter(this);
+        //mMainActivityPresenter = new MainActivityPresenter(this);
         setUpRecyclerView();
 
         // If we had saved configuration, restore the dataSet without hitting the backend.
@@ -70,8 +77,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityViewB
             mRecyclerView.setLayoutManager(new GridLayoutManager(this, NUM_COLUMS_LANDSCAPE));
         }
         //Initialize DataSet Empty Until the results come.
-        mMovieList = new ArrayList<>(0);
-        mAdapter = new MoviesAdapter(mMovieList);
+        //mMovieList = new ArrayList<>(0);
+        //mAdapter = new MoviesAdapter(mMovieList);
 
         mRecyclerView.setAdapter(mAdapter);
     }
