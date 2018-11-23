@@ -23,6 +23,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.android.support.DaggerAppCompatActivity;
 
 // TODO (Opt) Introduce Dagger
 // TODO (Opt) Load more films on Scroll https://medium.com/@programmerasi/how-to-implement-load-more-in-recyclerview-3c6358297f4
@@ -31,7 +32,7 @@ import butterknife.ButterKnife;
  * Main entry point class for the PopularMovies App.
  * In this class mainly the updating of views is dealt with.
  */
-public class MainActivity extends AppCompatActivity implements MainActivityViewBinder{
+public class MainActivity extends DaggerAppCompatActivity implements MainActivityViewBinder{
 
     public static final int NUM_COLUMS_PORTRAIT = 2;
     public static final int NUM_COLUMS_LANDSCAPE = 4;
