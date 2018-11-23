@@ -42,10 +42,14 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
     @BindView(R.id.error_dialog_view) View mErrorView;
     @BindView(R.id.error_msg_tv) TextView mErrorMessageTv;
-    private MoviesAdapter mAdapter;
+
+    // Dagger 2 Injections
+    @Inject
+    MoviesAdapter mAdapter;
     @Inject
     MainActivityPresenter mMainActivityPresenter;
-    List<Movie> mMovieList;
+    @Inject
+    List<Movie> mMovieList; //Initialized Empty
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,9 +76,6 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         } else { // Landscape configuration user more columns.
             mRecyclerView.setLayoutManager(new GridLayoutManager(this, NUM_COLUMS_LANDSCAPE));
         }
-        //Initialize DataSet Empty Until the results come.
-        mMovieList = new ArrayList<>(0);
-        mAdapter = new MoviesAdapter(mMovieList);
 
         mRecyclerView.setAdapter(mAdapter);
     }
