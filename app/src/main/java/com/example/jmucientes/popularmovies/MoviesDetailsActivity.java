@@ -17,6 +17,7 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.android.support.DaggerAppCompatActivity;
 
 /**
  * This class is responsible for showing the details of the Movie.
@@ -24,7 +25,7 @@ import butterknife.ButterKnife;
  * The layout defines a collapsing toolbar, where the collapsing toolbar is decorated
  * with a backdrop image from the movie.
  */
-public class MoviesDetailsActivity extends AppCompatActivity {
+public class MoviesDetailsActivity extends DaggerAppCompatActivity {
 
 
     @BindView(R.id.collapsing_toolbar_backdrop)
