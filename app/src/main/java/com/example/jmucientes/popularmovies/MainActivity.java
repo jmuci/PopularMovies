@@ -21,6 +21,8 @@ import com.example.jmucientes.popularmovies.view.MainActivityViewBinder;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.DaggerAppCompatActivity;
@@ -41,6 +43,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     @BindView(R.id.error_dialog_view) View mErrorView;
     @BindView(R.id.error_msg_tv) TextView mErrorMessageTv;
     private MoviesAdapter mAdapter;
+    @Inject
     MainActivityPresenter mMainActivityPresenter;
     List<Movie> mMovieList;
 
@@ -50,7 +53,6 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        mMainActivityPresenter = new MainActivityPresenter(this);
         setUpRecyclerView();
 
         // If we had saved configuration, restore the dataSet without hitting the backend.
