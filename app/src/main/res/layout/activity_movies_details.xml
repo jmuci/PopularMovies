@@ -120,6 +120,31 @@
                 android:paddingEnd="@dimen/medium_padding"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
+
+            <View
+                android:id="@+id/reviews_section_separator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="@dimen/medium_padding"
+                android:layout_marginEnd="@dimen/medium_padding"
+                android:background="@android:color/darker_gray"
+                />
+
+            <TextView
+                android:id="@+id/reviews_section_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reviews"
+                android:padding="@dimen/medium_margin"
+                style="@style/AppTheme"
+                android:textSize="18sp"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/reviews_recycler_view"
+                android:paddingStart="@dimen/medium_padding"
+                android:paddingEnd="@dimen/medium_padding"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>

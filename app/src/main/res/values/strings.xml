@@ -10,4 +10,5 @@
     <string name="failed_to_download_error_image_content_description">Failed to Download Error Image</string>
     <string name="poster_image_of_the_movie">Poster image of the movie</string>
     <string name="trailers">Trailers:</string>
+    <string name="reviews">UserReviews</string>
 </resources>
