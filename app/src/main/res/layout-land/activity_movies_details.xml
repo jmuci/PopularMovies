@@ -93,6 +93,29 @@
                         android:textSize="16sp"
                         style="@style/AppTheme"/>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="@dimen/medium_padding"
+                        android:layout_marginEnd="@dimen/medium_padding"
+                        android:background="@android:color/darker_gray"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/trailers"
+                        android:padding="@dimen/medium_margin"
+                        style="@style/AppTheme"
+                        android:textSize="18sp"/>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/trailers_recycler_view"
+                        android:paddingStart="@dimen/medium_padding"
+                        android:paddingEnd="@dimen/medium_padding"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+
                 </LinearLayout>
 
             </LinearLayout>
