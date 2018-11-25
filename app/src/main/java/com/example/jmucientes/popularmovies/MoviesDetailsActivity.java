@@ -1,19 +1,26 @@
 package com.example.jmucientes.popularmovies;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.jmucientes.popularmovies.adapter.MoviesAdapter;
+import com.example.jmucientes.popularmovies.adapter.TrailersAdapter;
 import com.example.jmucientes.popularmovies.model.Movie;
+import com.example.jmucientes.popularmovies.presenters.MovieDetailsPresenter;
 import com.example.jmucientes.popularmovies.util.Network;
+import com.example.jmucientes.popularmovies.view.MovieDetailsViewBinder;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,7 +32,7 @@ import dagger.android.support.DaggerAppCompatActivity;
  * The layout defines a collapsing toolbar, where the collapsing toolbar is decorated
  * with a backdrop image from the movie.
  */
-public class MoviesDetailsActivity extends DaggerAppCompatActivity {
+public class MoviesDetailsActivity extends DaggerAppCompatActivity implements MovieDetailsViewBinder {
 
 
     @BindView(R.id.collapsing_toolbar_backdrop)
@@ -43,8 +50,15 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity {
     TextView mSynopsisTv;
     @BindView(R.id.rating_bar)
     RatingBar mRatingBar;
+    @BindView(R.id.trailers_recycler_view)
+    RecyclerView mTrailersRV;
 
     Movie mMovie;
+
+    @Inject
+    TrailersAdapter mTrailersAdapter;
+    @Inject
+    MovieDetailsPresenter mMovieDetailsPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +69,20 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity {
         Intent startingIntent = getIntent();
         if (startingIntent != null && startingIntent.getSerializableExtra(MoviesAdapter.MOVIE_KEY) != null) {
             mMovie = (Movie) startingIntent.getSerializableExtra(MoviesAdapter.MOVIE_KEY);
+            mMovieDetailsPresenter.requestTrailersForMovie(mMovie.getId());
             populateUI();
+            setUpRecyclerView();
         }
 
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
         setUpToolBar();
         appBarLayout.setMinimumHeight(R.dimen.event_entity_appbar_height);
+    }
+
+    private void setUpRecyclerView() {
+        mTrailersRV.setHasFixedSize(true);
+        mTrailersRV.setLayoutManager(new LinearLayoutManager(this));
+        mTrailersRV.setAdapter(mTrailersAdapter);
     }
 
     private void setUpToolBar() {
@@ -92,5 +114,10 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity {
                     .placeholder(R.drawable.baseline_cloud_download_black_36)
                     .into(mPosterView);
         }
+    }
+
+    @Override
+    public void updateAdapterContent(List<String> trailers) {
+        mTrailersAdapter.updateDataSet(trailers);
     }
 }

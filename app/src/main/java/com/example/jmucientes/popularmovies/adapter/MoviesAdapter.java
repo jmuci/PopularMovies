@@ -3,7 +3,6 @@ package com.example.jmucientes.popularmovies.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -63,7 +62,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         mContext = parent.getContext();
         View imageView = LayoutInflater.from(mContext)
-                .inflate(R.layout.recycler_view_item, parent, false);
+                .inflate(R.layout.recycler_view_movie_item, parent, false);
         return new MovieViewHolder(imageView);
     }
 

@@ -49,7 +49,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     @Inject
     MainActivityPresenter mMainActivityPresenter;
     @Inject
-    List<Movie> mMovieList; //Initialized Empty
+    List<Movie> mMovieList; //Initialized Empty //TODO Remove this list.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
