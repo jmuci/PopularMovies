@@ -3,6 +3,7 @@ package com.example.jmucientes.popularmovies;
 import android.content.Intent;
 import android.support.design.widget.AppBarLayout;
 import android.os.Bundle;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -50,6 +51,8 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity implements Mo
     TextView mSynopsisTv;
     @BindView(R.id.rating_bar)
     RatingBar mRatingBar;
+    @BindView(R.id.scroll)
+    NestedScrollView mNestedScrollView;
     @BindView(R.id.trailers_recycler_view)
     RecyclerView mTrailersRV;
 
@@ -83,6 +86,7 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity implements Mo
         mTrailersRV.setHasFixedSize(true);
         mTrailersRV.setLayoutManager(new LinearLayoutManager(this));
         mTrailersRV.setAdapter(mTrailersAdapter);
+        mTrailersRV.setFocusable(false);
     }
 
     private void setUpToolBar() {
@@ -119,5 +123,6 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity implements Mo
     @Override
     public void updateAdapterContent(List<String> trailers) {
         mTrailersAdapter.updateDataSet(trailers);
+        mNestedScrollView.smoothScrollTo(0,0);
     }
 }
