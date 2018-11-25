@@ -1,5 +1,6 @@
 package com.example.jmucientes.popularmovies.presenters;
 
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -16,7 +17,10 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Callable;
+
+import javax.inject.Inject;
 
 import rx.Single;
 import rx.Subscriber;
@@ -25,6 +29,8 @@ import rx.schedulers.Schedulers;
 
 public class MovieDetailsPresenter {
 
+    public static final String FAVORITE_PREFERENCES = "FavoritePreferences";
+    private static final String KEY_PREFIX = "fav_";
     private WeakReference<MovieDetailsViewBinder> mDetailsViewBinderWR;
     private final String TAG = MovieDetailsPresenter.class.getName();
 
@@ -50,6 +56,21 @@ public class MovieDetailsPresenter {
                 parseReviewsResultsAndUpdateAdapter(jsonResponse);
             }
         });
+    }
+
+    public boolean isMovieFavorite(int id) {
+        SharedPreferences pref = mDetailsViewBinderWR.get().getContext().getSharedPreferences(FAVORITE_PREFERENCES, 0);
+        return pref.getBoolean(KEY_PREFIX + id, false);
+    }
+
+    public void updateIsFavoriteStatus(int id) {
+        SharedPreferences pref = mDetailsViewBinderWR.get().getContext().getSharedPreferences(FAVORITE_PREFERENCES, 0); // 0 - for private mode
+        String key = KEY_PREFIX + id;
+        boolean isFavOldValue = pref.getBoolean(key, false);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(key, !isFavOldValue); // Invert the previous value
+        editor.apply();
+        Log.d(TAG, String.format(Locale.getDefault(), "Successfully updated key %s to %s ", key, !isFavOldValue));
     }
 
     interface GeneralParser {

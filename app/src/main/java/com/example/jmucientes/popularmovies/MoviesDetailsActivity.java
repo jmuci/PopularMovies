@@ -1,8 +1,10 @@
 package com.example.jmucientes.popularmovies;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.AppBarLayout;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -64,6 +66,8 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity implements Mo
     RecyclerView mReviewsRV;
     @BindView(R.id.reviews_section_header)
     TextView mReviewsTextView;
+    @BindView(R.id.fab)
+    FloatingActionButton mFavoriteButton;
 
 
     Movie mMovie;
@@ -74,6 +78,8 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity implements Mo
     TrailersAdapter mTrailersAdapter;
     @Inject
     MovieDetailsPresenter mMovieDetailsPresenter;
+
+    private boolean mIsFavorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +100,13 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity implements Mo
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
         setUpToolBar();
         appBarLayout.setMinimumHeight(R.dimen.event_entity_appbar_height);
+        mFavoriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMovieDetailsPresenter.updateIsFavoriteStatus(mMovie.getId());
+                setIsFavoriteButtonStatus(mMovieDetailsPresenter.isMovieFavorite(mMovie.getId()));
+            }
+        });
     }
 
     private void setUpRecyclerView(RecyclerView recyclerView, RecyclerView.Adapter adapter) {
@@ -131,6 +144,17 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity implements Mo
                     .error(R.drawable.baseline_error_black_36)
                     .placeholder(R.drawable.baseline_cloud_download_black_36)
                     .into(mPosterView);
+
+            // Update FAB Save to Favorites Button State
+            setIsFavoriteButtonStatus(mMovieDetailsPresenter.isMovieFavorite(mMovie.getId()));
+        }
+    }
+
+    private void setIsFavoriteButtonStatus(boolean isFavorite) {
+        if (isFavorite) {
+            mFavoriteButton.setImageResource(R.drawable.baseline_favorite_black_24dp);
+        } else {
+            mFavoriteButton.setImageResource(R.drawable.baseline_favorite_white_24);
         }
     }
 
@@ -147,5 +171,10 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity implements Mo
             mReviewsTextView.setVisibility(View.VISIBLE);
         }
         mReviewsAdapter.updateDataSet(reviews);
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
     }
 }
