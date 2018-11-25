@@ -7,13 +7,17 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.jmucientes.popularmovies.adapter.MoviesAdapter;
+import com.example.jmucientes.popularmovies.adapter.ReviewsAdapter;
 import com.example.jmucientes.popularmovies.adapter.TrailersAdapter;
 import com.example.jmucientes.popularmovies.model.Movie;
+import com.example.jmucientes.popularmovies.model.Review;
 import com.example.jmucientes.popularmovies.model.VideoTrailer;
 import com.example.jmucientes.popularmovies.presenters.MovieDetailsPresenter;
 import com.example.jmucientes.popularmovies.util.NetworkUtils;
@@ -56,9 +60,16 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity implements Mo
     NestedScrollView mNestedScrollView;
     @BindView(R.id.trailers_recycler_view)
     RecyclerView mTrailersRV;
+    @BindView(R.id.reviews_recycler_view)
+    RecyclerView mReviewsRV;
+    @BindView(R.id.reviews_section_header)
+    TextView mReviewsTextView;
+
 
     Movie mMovie;
 
+    @Inject
+    ReviewsAdapter mReviewsAdapter;
     @Inject
     TrailersAdapter mTrailersAdapter;
     @Inject
@@ -74,8 +85,10 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity implements Mo
         if (startingIntent != null && startingIntent.getSerializableExtra(MoviesAdapter.MOVIE_KEY) != null) {
             mMovie = (Movie) startingIntent.getSerializableExtra(MoviesAdapter.MOVIE_KEY);
             mMovieDetailsPresenter.requestTrailersForMovie(mMovie.getId());
+            mMovieDetailsPresenter.requestReviewsForMoview(mMovie.getId());
             populateUI();
-            setUpRecyclerView();
+            setUpRecyclerView(mTrailersRV, mTrailersAdapter);
+            setUpRecyclerView(mReviewsRV, mReviewsAdapter);
         }
 
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
@@ -83,11 +96,11 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity implements Mo
         appBarLayout.setMinimumHeight(R.dimen.event_entity_appbar_height);
     }
 
-    private void setUpRecyclerView() {
-        mTrailersRV.setHasFixedSize(true);
-        mTrailersRV.setLayoutManager(new LinearLayoutManager(this));
-        mTrailersRV.setAdapter(mTrailersAdapter);
-        mTrailersRV.setFocusable(false);
+    private void setUpRecyclerView(RecyclerView recyclerView, RecyclerView.Adapter adapter) {
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+        recyclerView.setFocusable(false);
     }
 
     private void setUpToolBar() {
@@ -122,7 +135,17 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity implements Mo
     }
 
     @Override
-    public void updateAdapterContent(List<VideoTrailer> trailers) {
+    public void updateTrailersAdapterContent(List<VideoTrailer> trailers) {
         mTrailersAdapter.updateDataSet(trailers);
+    }
+
+    @Override
+    public void updateReviewsAdapterContent(List<Review> reviews) {
+        if (reviews.size() == 0) {
+            mReviewsTextView.setVisibility(View.GONE);
+        } else {
+            mReviewsTextView.setVisibility(View.VISIBLE);
+        }
+        mReviewsAdapter.updateDataSet(reviews);
     }
 }

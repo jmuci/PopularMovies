@@ -4,8 +4,10 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.example.jmucientes.popularmovies.model.Review;
 import com.example.jmucientes.popularmovies.model.VideoTrailer;
 import com.example.jmucientes.popularmovies.util.NetworkUtils;
+import com.example.jmucientes.popularmovies.util.ReviewJsonParser;
 import com.example.jmucientes.popularmovies.util.VideoTrailerJsonParser;
 import com.example.jmucientes.popularmovies.view.MovieDetailsViewBinder;
 
@@ -31,11 +33,30 @@ public class MovieDetailsPresenter {
     }
 
     public void requestTrailersForMovie(int id) {
-        Uri requestUri = NetworkUtils.buildRequestUriForTrailersForMovie(id);
-        executeBackgroundNetworkRequest(requestUri);
+        Uri requestUri = NetworkUtils.buildRequestUriForMovieTrailers(id);
+        executeBackgroundNetworkRequest(requestUri, new GeneralParser() {
+            @Override
+            public void parseResultsAndUpdateAdapter(String jsonResponse) throws JSONException {
+                parseTrailersResultsAndUpdateAdapter(jsonResponse);
+            }
+        });
     }
 
-    private void executeBackgroundNetworkRequest(Uri requestUri) {
+    public void requestReviewsForMoview(int id) {
+        Uri requestUri = NetworkUtils.buildRequestUriForMovieReviews(id);
+        executeBackgroundNetworkRequest(requestUri, new GeneralParser() {
+            @Override
+            public void parseResultsAndUpdateAdapter(String jsonResponse) throws JSONException {
+                parseReviewsResultsAndUpdateAdapter(jsonResponse);
+            }
+        });
+    }
+
+    interface GeneralParser {
+        void parseResultsAndUpdateAdapter(String jsonResponse) throws JSONException;
+    }
+
+    private void executeBackgroundNetworkRequest(Uri requestUri, final GeneralParser parser) {
 
         Single<String> mResponseSingle = makeRequestSingleObvservable(requestUri);
 
@@ -56,22 +77,39 @@ public class MovieDetailsPresenter {
                     @Override
                     public void onNext(String jsonString) {
                         Log.d(TAG, "onNext() called.");
-                        List<VideoTrailer> trailersList = null;
+                        //parseTrailersResultsAndUpdateAdapter(jsonString);
                         try {
-                             trailersList = VideoTrailerJsonParser.parseTrailersListJsonResponse(jsonString);
+                            parser.parseResultsAndUpdateAdapter(jsonString);
                         } catch (JSONException e) {
-                            e.printStackTrace();
-                            String msg = "JSON parsing error! Error : " + e.toString();
-                            Log.e(TAG, msg);
-                        }
-
-                        if (trailersList != null && trailersList.size() > 0) {
-                            mDetailsViewBinderWR.get().updateAdapterContent(trailersList);
-                        } else {
-                            Log.e(TAG, "View binder is null! The activity was destroyed before the results arrive?");
-                        }
+                        e.printStackTrace();
+                        String msg = "JSON parsing error! Error : " + e.toString();
+                        Log.e(TAG, msg);
                     }
+
+                }
                 });
+    }
+
+    private void parseTrailersResultsAndUpdateAdapter(String jsonString) throws JSONException {
+        List<VideoTrailer> trailersList = null;
+        trailersList = VideoTrailerJsonParser.parseTrailersListJsonResponse(jsonString);
+
+        if (trailersList != null && trailersList.size() > 0) {
+            mDetailsViewBinderWR.get().updateTrailersAdapterContent(trailersList);
+        } else {
+            Log.e(TAG, "View binder is null! The activity was destroyed before the results arrive?");
+        }
+    }
+
+    private void parseReviewsResultsAndUpdateAdapter(String jsonString) throws JSONException {
+        List<Review> reviewList = null;
+        reviewList = ReviewJsonParser.parseReviewListJsonResponse(jsonString);
+
+        if (reviewList != null && reviewList.size() > 0) {
+            mDetailsViewBinderWR.get().updateReviewsAdapterContent(reviewList);
+        } else {
+            Log.e(TAG, "View binder is null! The activity was destroyed before the results arrive?");
+        }
     }
 
     /**
@@ -94,4 +132,6 @@ public class MovieDetailsPresenter {
             }
         });
     }
+
+
 }

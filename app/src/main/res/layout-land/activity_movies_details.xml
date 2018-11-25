@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -17,11 +16,17 @@
         android:gravity="top"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:baselineAligned="false"
                 android:layout_gravity="top"
+                android:baselineAligned="false"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -33,43 +38,43 @@
 
                     <RatingBar
                         android:id="@+id/rating_bar"
+                        style="@style/RatingBarBig"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/small_padding"
-                        android:numStars="5"
-                        android:max="10"
                         android:isIndicator="true"
-                        style="@style/RatingBarBig"/>
+                        android:max="10"
+                        android:numStars="5"
+                        android:padding="@dimen/small_padding" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:padding="@dimen/small_padding"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:padding="@dimen/small_padding">
 
                         <TextView
                             android:id="@+id/release_year"
+                            style="@style/SideBigPadding.Bold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:paddingStart="@dimen/big_padding"
-                            android:paddingEnd="@dimen/big_padding"
-                            android:gravity="center"
                             android:layout_gravity="center_vertical"
-                            android:textSize="18sp"
-                            style="@style/SideBigPadding.Bold"/>
+                            android:gravity="center"
+                            android:paddingEnd="@dimen/big_padding"
+                            android:paddingStart="@dimen/big_padding"
+                            android:textSize="18sp" />
 
                         <TextView
                             android:id="@+id/rating"
+                            style="@style/SideBigPadding.Bold"
                             android:layout_width="110dp"
                             android:layout_height="40dp"
-                            android:textStyle="bold"
                             android:background="@color/colorPrimary"
-                            android:textColor="@android:color/white"
-                            android:paddingStart="@dimen/big_padding"
                             android:paddingEnd="@dimen/big_padding"
+                            android:paddingStart="@dimen/big_padding"
+                            android:textColor="@android:color/white"
                             android:textSize="18sp"
-                            style="@style/SideBigPadding.Bold"/>
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <ImageView
@@ -78,91 +83,90 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="12dp"
-                        android:scaleType="fitXY"
                         android:adjustViewBounds="true"
-                        android:contentDescription="@string/poster_image_of_the_movie" />
+                        android:contentDescription="@string/poster_image_of_the_movie"
+                        android:scaleType="fitXY" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_weight="6"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_weight="6"
                     android:gravity="center"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/synopsis_tv"
+                        style="@style/AppTheme"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/medium_padding"
-                        android:textSize="16sp"
-                        style="@style/AppTheme"/>
+                        android:textSize="16sp" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginStart="@dimen/medium_padding"
                         android:layout_marginEnd="@dimen/medium_padding"
-                        android:background="@android:color/darker_gray"
-                        />
+                        android:layout_marginStart="@dimen/medium_padding"
+                        android:background="@android:color/darker_gray" />
 
                     <TextView
+                        style="@style/AppTheme"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/trailers"
                         android:padding="@dimen/medium_margin"
-                        style="@style/AppTheme"
-                        android:textSize="18sp"/>
+                        android:text="@string/trailers"
+                        android:textSize="18sp" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/trailers_recycler_view"
-                        android:paddingStart="@dimen/medium_padding"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:paddingEnd="@dimen/medium_padding"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
-
-
-                    <View
-                        android:id="@+id/reviews_section_separator"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="@dimen/medium_padding"
-                        android:layout_marginEnd="@dimen/medium_padding"
-                        android:background="@android:color/darker_gray"
-                        />
-
-                    <TextView
-                        android:id="@+id/reviews_section_header"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/reviews"
-                        android:padding="@dimen/medium_margin"
-                        style="@style/AppTheme"
-                        android:textSize="18sp"/>
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/reviews_recycler_view"
-                        android:paddingStart="@dimen/medium_padding"
-                        android:paddingEnd="@dimen/medium_padding"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                        android:paddingStart="@dimen/medium_padding" />
 
                 </LinearLayout>
 
             </LinearLayout>
 
+            <View
+                android:id="@+id/reviews_section_separator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginEnd="@dimen/medium_padding"
+                android:layout_marginStart="@dimen/medium_padding"
+                android:background="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/reviews_section_header"
+                style="@style/AppTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/medium_margin"
+                android:text="@string/reviews"
+                android:textSize="18sp" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/reviews_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingEnd="@dimen/medium_padding"
+                android:paddingStart="@dimen/medium_padding" />
+
+        </LinearLayout>
+
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
+        style="@style/Widget.Design.FloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_anchor="@id/app_bar_layout"
-        app:layout_anchorGravity="bottom|right|end"
         android:layout_marginEnd="@dimen/medium_margin"
         android:src="@drawable/baseline_favorite_white_24"
-        style="@style/Widget.Design.FloatingActionButton"/>
+        app:layout_anchor="@id/app_bar_layout"
+        app:layout_anchorGravity="bottom|right|end" />
 
 </android.support.design.widget.CoordinatorLayout>
