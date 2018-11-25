@@ -13,7 +13,7 @@
         android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="5dp"
         android:gravity="top"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -21,48 +21,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:baselineAligned="false"
-                android:layout_gravity="center"
+                android:layout_gravity="top"
                 android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="4"
+                    android:layout_weight="5"
                     android:gravity="center"
                     android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/poster_view"
-                        android:layout_width="250dp"
-                        android:layout_height="440dp"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="12dp"
-                        android:contentDescription="@string/poster_image_of_the_movie"
-                        android:padding="@dimen/small_padding" />
 
                     <RatingBar
                         android:id="@+id/rating_bar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:padding="@dimen/small_padding"
                         android:numStars="5"
                         android:max="10"
                         android:isIndicator="true"
                         style="@style/RatingBarBig"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="6"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:orientation="vertical">
 
                     <LinearLayout
-                        android:layout_marginTop="80dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:padding="@dimen/small_padding"
                         android:orientation="horizontal">
 
                         <TextView
@@ -88,6 +71,26 @@
                             android:textSize="18sp"
                             style="@style/SideBigPadding.Bold"/>
                     </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/poster_view"
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="12dp"
+                        android:scaleType="fitXY"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/poster_image_of_the_movie" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="6"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/synopsis_tv"
@@ -115,6 +118,32 @@
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/trailers_recycler_view"
+                        android:paddingStart="@dimen/medium_padding"
+                        android:paddingEnd="@dimen/medium_padding"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+
+
+                    <View
+                        android:id="@+id/reviews_section_separator"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="@dimen/medium_padding"
+                        android:layout_marginEnd="@dimen/medium_padding"
+                        android:background="@android:color/darker_gray"
+                        />
+
+                    <TextView
+                        android:id="@+id/reviews_section_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/reviews"
+                        android:padding="@dimen/medium_margin"
+                        style="@style/AppTheme"
+                        android:textSize="18sp"/>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/reviews_recycler_view"
                         android:paddingStart="@dimen/medium_padding"
                         android:paddingEnd="@dimen/medium_padding"
                         android:layout_width="match_parent"
