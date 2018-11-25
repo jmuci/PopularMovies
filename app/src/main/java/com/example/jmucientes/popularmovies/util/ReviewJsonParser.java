@@ -33,9 +33,9 @@ public class ReviewJsonParser {
 
     private static Review parseReviewJson(JSONObject jsonObject) throws JSONException {
         String id = jsonObject.getString("id");
-        String content = jsonObject.getString("key");
-        String author = jsonObject.getString("name");
-        String url = jsonObject.getString("site");
+        String content = jsonObject.getString("content");
+        String author = jsonObject.getString("author");
+        String url = jsonObject.getString("url");
 
         return new Review(id, content, author, url);
     }

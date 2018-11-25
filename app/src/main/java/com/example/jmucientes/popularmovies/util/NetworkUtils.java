@@ -36,6 +36,7 @@ public class NetworkUtils {
     public static final String TOP_RATED_END_POINT = "top_rated";
     public static final String MOST_POPULAR_END_POINT = "popular";
     private static final String MOVIE_TRAILERS = "videos";
+    private static final String MOVIE_REVIEWS = "reviews";
 
 
     /**
@@ -76,8 +77,8 @@ public class NetworkUtils {
      * @return full Uri
      */
     @NonNull
-    public static Uri buildRequestUriForTrailersForMovie(int id){
-        //Uri http://api.themoviedb.org/3/movie/top_rated?api_key=0c6313bbf2f22242126a23d1d43f83cd
+    public static Uri buildRequestUriForMovieTrailers(int id){
+        //Uri http://api.themoviedb.org/3/movie/240/videos?api_key=0c6313bbf2f22242126a23d1d43f83cd
         Uri.Builder builder = new Uri.Builder();
         return builder.scheme(HTTP_SCHEME)
                 .authority(API_THEMOVIEDB_AUTHORITY)
@@ -85,6 +86,26 @@ public class NetworkUtils {
                 .appendPath(MOVIE_PATH)
                 .appendPath(Integer.toString(id))
                 .appendPath(MOVIE_TRAILERS)
+                .appendQueryParameter(API_KEY_PARAM, PERSONAL_API_KEY)
+                .build();
+    }
+
+
+    /**
+     * This method will build a complete URI to hit either the movie reviews end point.
+     * @param id int
+     * @return full Uri
+     */
+    @NonNull
+    public static Uri buildRequestUriForMovieReviews(int id){
+        //Uri http://api.themoviedb.org/3/movie/240/reviews?api_key=0c6313bbf2f22242126a23d1d43f83cd
+        Uri.Builder builder = new Uri.Builder();
+        return builder.scheme(HTTP_SCHEME)
+                .authority(API_THEMOVIEDB_AUTHORITY)
+                .appendPath(VERSION_SEGMENT)
+                .appendPath(MOVIE_PATH)
+                .appendPath(Integer.toString(id))
+                .appendPath(MOVIE_REVIEWS)
                 .appendQueryParameter(API_KEY_PARAM, PERSONAL_API_KEY)
                 .build();
     }

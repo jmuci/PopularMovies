@@ -9,25 +9,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/play_button"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:background="@android:color/transparent"
-            android:padding="2dp"
-            android:src="@drawable/roundcorners" />
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/trailer_title"
+            android:id="@+id/review_author"
             style="@style/AppTheme"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:padding="@dimen/small_padding"
-            android:paddingEnd="@dimen/big_padding"
-            android:paddingStart="@dimen/big_padding" />
+            android:padding="@dimen/small_padding" />
+
+        <TextView
+            android:id="@+id/review_content"
+            style="@style/AppTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="@dimen/small_padding" />
     </LinearLayout>
 
     <ImageView
