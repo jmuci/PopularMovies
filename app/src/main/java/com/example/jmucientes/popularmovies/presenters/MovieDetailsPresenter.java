@@ -37,7 +37,7 @@ public class MovieDetailsPresenter {
 
     private void executeBackgroundNetworkRequest(Uri requestUri) {
 
-        Single<String> mResponseSingle = makeMoviesRequestSingleObvservable(requestUri);
+        Single<String> mResponseSingle = makeRequestSingleObvservable(requestUri);
 
         mResponseSingle.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -80,7 +80,7 @@ public class MovieDetailsPresenter {
      * @return
      */
 
-    private Single<String> makeMoviesRequestSingleObvservable(@NonNull final Uri requestUri) {
+    private Single<String> makeRequestSingleObvservable(@NonNull final Uri requestUri) {
         return Single.fromCallable(new Callable<String>() {
             @Override
             public String call() throws Exception {
