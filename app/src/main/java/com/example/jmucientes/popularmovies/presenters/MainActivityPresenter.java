@@ -6,8 +6,8 @@ import android.util.Log;
 
 import com.example.jmucientes.popularmovies.MainActivity;
 import com.example.jmucientes.popularmovies.model.Movie;
-import com.example.jmucientes.popularmovies.util.JsonUtils;
-import com.example.jmucientes.popularmovies.util.Network;
+import com.example.jmucientes.popularmovies.util.MovieJsonParser;
+import com.example.jmucientes.popularmovies.util.NetworkUtils;
 import com.example.jmucientes.popularmovies.view.MainActivityViewBinder;
 
 import org.json.JSONException;
@@ -44,10 +44,10 @@ public class MainActivityPresenter {
      * Executes a request to the Top Rated end point.
      */
     public void requestTopRatedMoviesFromTheMovieDB() {
-        mCurrentSortOption = Network.TOP_RATED_END_POINT;
-        Uri requestUri = Network.buildRequestUriForMoviesWithEndPoint(Network.TOP_RATED_END_POINT, "1");
-        Uri requestUri2 = Network.buildRequestUriForMoviesWithEndPoint(Network.TOP_RATED_END_POINT,"2");
-        Uri requestUri3 = Network.buildRequestUriForMoviesWithEndPoint(Network.TOP_RATED_END_POINT,"3");
+        mCurrentSortOption = NetworkUtils.TOP_RATED_END_POINT;
+        Uri requestUri = NetworkUtils.buildRequestUriForMoviesWithEndPoint(NetworkUtils.TOP_RATED_END_POINT, "1");
+        Uri requestUri2 = NetworkUtils.buildRequestUriForMoviesWithEndPoint(NetworkUtils.TOP_RATED_END_POINT,"2");
+        Uri requestUri3 = NetworkUtils.buildRequestUriForMoviesWithEndPoint(NetworkUtils.TOP_RATED_END_POINT,"3");
         executeBackgroundNetworkRequest(requestUri, requestUri2, requestUri3);
     }
 
@@ -55,10 +55,10 @@ public class MainActivityPresenter {
      * Executes a request to the most popular end point.
      */
     public void requestMostPopularMoviesFromTheMovieDB() {
-        mCurrentSortOption = Network.MOST_POPULAR_END_POINT;
-        Uri requestUri = Network.buildRequestUriForMoviesWithEndPoint(Network.MOST_POPULAR_END_POINT, "1");
-        Uri requestUri2 = Network.buildRequestUriForMoviesWithEndPoint(Network.MOST_POPULAR_END_POINT,"2");
-        Uri requestUri3 = Network.buildRequestUriForMoviesWithEndPoint(Network.MOST_POPULAR_END_POINT, "3");
+        mCurrentSortOption = NetworkUtils.MOST_POPULAR_END_POINT;
+        Uri requestUri = NetworkUtils.buildRequestUriForMoviesWithEndPoint(NetworkUtils.MOST_POPULAR_END_POINT, "1");
+        Uri requestUri2 = NetworkUtils.buildRequestUriForMoviesWithEndPoint(NetworkUtils.MOST_POPULAR_END_POINT,"2");
+        Uri requestUri3 = NetworkUtils.buildRequestUriForMoviesWithEndPoint(NetworkUtils.MOST_POPULAR_END_POINT, "3");
         executeBackgroundNetworkRequest(requestUri, requestUri2, requestUri3);
     }
 
@@ -91,7 +91,7 @@ public class MainActivityPresenter {
                         Log.d(TAG, "onNext() called.");
                         List<Movie> movieList = null;
                         try {
-                            movieList = JsonUtils.parseJsonResponse(jsonString);
+                            movieList = MovieJsonParser.parseMovieListJsonResponse(jsonString);
                         } catch (JSONException e) {
                             e.printStackTrace();
                             String msg = "JSON parsing error! Error : " + e.toString();
@@ -119,7 +119,7 @@ public class MainActivityPresenter {
             @Override
             public String call() throws Exception {
                 try {
-                    return Network.makeRequest(requestUri);
+                    return NetworkUtils.makeRequest(requestUri);
                 } catch (IOException e) {
                     String msg = "IOException. Failed to fetch movies list. Error: " + e.getMessage();
                     Log.e(TAG, msg);
