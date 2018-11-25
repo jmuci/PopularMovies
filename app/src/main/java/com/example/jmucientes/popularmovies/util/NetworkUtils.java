@@ -13,14 +13,14 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class Network {
+public class NetworkUtils {
     private static final String HTTP_SCHEME = "http";
     private static final String API_THEMOVIEDB_AUTHORITY = "api.themoviedb.org";
     private static final String MOVIE_PATH = "movie";
 
     private static final String API_KEY_PARAM = "api_key";
     private static final String PERSONAL_API_KEY = BuildConfig.TheMovieApiKey;
-    private static final String TAG = Network.class.getName();
+    private static final String TAG = NetworkUtils.class.getName();
     private static final String PATH = "t/p";
     private static final String IMAGES_AUTH = "image.tmdb.org";
     private static final String VERSION_SEGMENT = "3";
@@ -35,6 +35,7 @@ public class Network {
 
     public static final String TOP_RATED_END_POINT = "top_rated";
     public static final String MOST_POPULAR_END_POINT = "popular";
+    private static final String MOVIE_TRAILERS = "videos";
 
 
     /**
@@ -66,6 +67,25 @@ public class Network {
                 .appendPath(endPoint)
                 .appendQueryParameter(API_KEY_PARAM, PERSONAL_API_KEY)
                 .appendQueryParameter(PAGE_KEY, page)
+                .build();
+    }
+
+    /**
+     * This method will build a complete URI to hit either the movie trailers end point.
+     * @param id int
+     * @return full Uri
+     */
+    @NonNull
+    public static Uri buildRequestUriForTrailersForMovie(int id){
+        //Uri http://api.themoviedb.org/3/movie/top_rated?api_key=0c6313bbf2f22242126a23d1d43f83cd
+        Uri.Builder builder = new Uri.Builder();
+        return builder.scheme(HTTP_SCHEME)
+                .authority(API_THEMOVIEDB_AUTHORITY)
+                .appendPath(VERSION_SEGMENT)
+                .appendPath(MOVIE_PATH)
+                .appendPath(Integer.toString(id))
+                .appendPath(MOVIE_TRAILERS)
+                .appendQueryParameter(API_KEY_PARAM, PERSONAL_API_KEY)
                 .build();
     }
 

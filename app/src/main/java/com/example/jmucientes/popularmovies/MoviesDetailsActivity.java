@@ -14,8 +14,9 @@ import android.widget.TextView;
 import com.example.jmucientes.popularmovies.adapter.MoviesAdapter;
 import com.example.jmucientes.popularmovies.adapter.TrailersAdapter;
 import com.example.jmucientes.popularmovies.model.Movie;
+import com.example.jmucientes.popularmovies.model.VideoTrailer;
 import com.example.jmucientes.popularmovies.presenters.MovieDetailsPresenter;
-import com.example.jmucientes.popularmovies.util.Network;
+import com.example.jmucientes.popularmovies.util.NetworkUtils;
 import com.example.jmucientes.popularmovies.view.MovieDetailsViewBinder;
 import com.squareup.picasso.Picasso;
 
@@ -106,14 +107,14 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity implements Mo
             mRating.setText(mMovie.getVote_average());
             // Set back drop image with Higher Resolution
             Picasso.with(this)
-                    .load(Network.getFullyQualifiedImageUri(mMovie.getBackdrop_path(), Network.IMAGE_SIZE_W_500))
+                    .load(NetworkUtils.getFullyQualifiedImageUri(mMovie.getBackdrop_path(), NetworkUtils.IMAGE_SIZE_W_500))
                     .error(R.drawable.baseline_error_black_36)
                     .placeholder(R.drawable.baseline_cloud_download_black_36)
                     .into(mImageBackdropView);
 
             // Set poster image in Detailed view with Higher Resolution
             Picasso.with(this)
-                    .load(Network.getFullyQualifiedImageUri(mMovie.getPoster_path(), Network.IMAGE_SIZE_W_500))
+                    .load(NetworkUtils.getFullyQualifiedImageUri(mMovie.getPoster_path(), NetworkUtils.IMAGE_SIZE_W_500))
                     .error(R.drawable.baseline_error_black_36)
                     .placeholder(R.drawable.baseline_cloud_download_black_36)
                     .into(mPosterView);
@@ -121,8 +122,7 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity implements Mo
     }
 
     @Override
-    public void updateAdapterContent(List<String> trailers) {
+    public void updateAdapterContent(List<VideoTrailer> trailers) {
         mTrailersAdapter.updateDataSet(trailers);
-        mNestedScrollView.smoothScrollTo(0,0);
     }
 }

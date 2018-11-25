@@ -2,7 +2,6 @@ package com.example.jmucientes.popularmovies;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -15,10 +14,9 @@ import android.widget.TextView;
 import com.example.jmucientes.popularmovies.adapter.MoviesAdapter;
 import com.example.jmucientes.popularmovies.model.Movie;
 import com.example.jmucientes.popularmovies.presenters.MainActivityPresenter;
-import com.example.jmucientes.popularmovies.util.Network;
+import com.example.jmucientes.popularmovies.util.NetworkUtils;
 import com.example.jmucientes.popularmovies.view.MainActivityViewBinder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -93,7 +91,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
 
         // To optimize, we only send a request if the user clicks on a different sort mode.
         if (id == R.id.open_order_most_pop) {
-            if (!mMainActivityPresenter.getCurrentSortOption().equals(Network.MOST_POPULAR_END_POINT)) {
+            if (!mMainActivityPresenter.getCurrentSortOption().equals(NetworkUtils.MOST_POPULAR_END_POINT)) {
                 mAdapter.clearDataSetWithoutNotifyDataSetChanged();
                 mMainActivityPresenter.requestMostPopularMoviesFromTheMovieDB();
             }
@@ -101,7 +99,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         }
 
         if (id == R.id.order_top_movies) {
-            if (!mMainActivityPresenter.getCurrentSortOption().equals(Network.TOP_RATED_END_POINT)) {
+            if (!mMainActivityPresenter.getCurrentSortOption().equals(NetworkUtils.TOP_RATED_END_POINT)) {
                 mAdapter.clearDataSetWithoutNotifyDataSetChanged();
                 mMainActivityPresenter.requestTopRatedMoviesFromTheMovieDB();
             }

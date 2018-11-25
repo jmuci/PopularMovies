@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +14,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jmucientes.popularmovies.R;
+import com.example.jmucientes.popularmovies.model.VideoTrailer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.TrailerViewHolder> {
     public static final String MOVIE_KEY = "trailer_key";
 
     private static final String TAG = TrailersAdapter.class.getName();
-    private List<String> mDataSet;
+    private List<VideoTrailer> mDataSet;
     private Context mContext;
 
     public TrailersAdapter() {
@@ -46,7 +47,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
         }
 
         private void playTrailerFromYouTube(int adapterPosition) {
-            final Intent playVideoIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mDataSet.get(adapterPosition)));
+            final Intent playVideoIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mDataSet.get(adapterPosition).getYouTubeLink()));
             mContext.startActivity(playVideoIntent);
         }
     }
@@ -62,7 +63,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
 
     @Override
     public void onBindViewHolder(@NonNull TrailerViewHolder holder, int position) {
-        holder.mTextView.setText(String.format(Locale.getDefault(), "Trailer %d", position + 1));
+        holder.mTextView.setText(mDataSet.get(position).getName());
     }
 
     @Override
@@ -70,7 +71,9 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
         return mDataSet.size();
     }
 
-    public void updateDataSet(@NonNull List<String> trailers) {
+    public void updateDataSet(@NonNull List<VideoTrailer> trailers) {
+        Log.d(TAG, "Updating Dataset");
         mDataSet = trailers;
+        notifyDataSetChanged();
     }
 }

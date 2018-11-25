@@ -12,10 +12,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JsonUtils {
-    private static final String TAG = JsonUtils.class.getName();
+public class MovieJsonParser {
+    private static final String TAG = MovieJsonParser.class.getName();
 
-    public static List<Movie> parseJsonResponse(String json) throws JSONException {
+    public static List<Movie> parseMovieListJsonResponse(String json) throws JSONException {
         if (TextUtils.isEmpty(json)) {
             Log.w(TAG, "Attemted to parse empty JSON response. ");
             return null;
