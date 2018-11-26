@@ -1,20 +1,27 @@
 package com.example.jmucientes.popularmovies.presenters;
 
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.jmucientes.popularmovies.MainActivity;
 import com.example.jmucientes.popularmovies.model.Movie;
 import com.example.jmucientes.popularmovies.util.MovieJsonParser;
 import com.example.jmucientes.popularmovies.util.NetworkUtils;
 import com.example.jmucientes.popularmovies.view.MainActivityViewBinder;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 import rx.Single;
@@ -32,12 +39,18 @@ import static android.support.v4.util.Preconditions.checkNotNull;
  */
 public class MainActivityPresenter {
     private static final String TAG  = MainActivity.class.getName();
+    public static final String SHOW_FAVORITES = "show_favorites_order";
+    //TODO Move to string resources
+    public static final String TOP_RATED_MOVIES_TITLE = "Top Rated Movies";
+    public static final String POPULAR_MOVIES_NOW_TITLE = "Popular Movies Now";
+    public static final String MY_FAVORITE_MOVIES_TITLE = "My Favorite Movies";
 
     private WeakReference<MainActivityViewBinder> mViewBinderWR;
     private String mCurrentSortOption;
 
     public MainActivityPresenter(@NonNull MainActivityViewBinder viewBinder) {
         mViewBinderWR = new WeakReference<>(checkNotNull(viewBinder));
+        mCurrentSortOption = NetworkUtils.TOP_RATED_END_POINT;
     }
 
     /**
@@ -49,6 +62,7 @@ public class MainActivityPresenter {
         Uri requestUri2 = NetworkUtils.buildRequestUriForMoviesWithEndPoint(NetworkUtils.TOP_RATED_END_POINT,"2");
         Uri requestUri3 = NetworkUtils.buildRequestUriForMoviesWithEndPoint(NetworkUtils.TOP_RATED_END_POINT,"3");
         executeBackgroundNetworkRequest(requestUri, requestUri2, requestUri3);
+        mViewBinderWR.get().setToolBarTitle(TOP_RATED_MOVIES_TITLE);
     }
 
     /**
@@ -60,6 +74,44 @@ public class MainActivityPresenter {
         Uri requestUri2 = NetworkUtils.buildRequestUriForMoviesWithEndPoint(NetworkUtils.MOST_POPULAR_END_POINT,"2");
         Uri requestUri3 = NetworkUtils.buildRequestUriForMoviesWithEndPoint(NetworkUtils.MOST_POPULAR_END_POINT, "3");
         executeBackgroundNetworkRequest(requestUri, requestUri2, requestUri3);
+        mViewBinderWR.get().setToolBarTitle(POPULAR_MOVIES_NOW_TITLE);
+    }
+
+    public boolean showOnlyFavoriteMovies() {
+        List<Movie> favoriteMovies = getFavoriteMoviesList();
+        if (favoriteMovies.size() > 0) {
+            mViewBinderWR.get().updateAdapterContent(favoriteMovies);
+            mCurrentSortOption = SHOW_FAVORITES;
+            mViewBinderWR.get().setToolBarTitle(MY_FAVORITE_MOVIES_TITLE);
+            return true;
+        } else {
+            Toast.makeText(mViewBinderWR.get().getContext(), "No movies saved in favorites yet. ", Toast.LENGTH_LONG).show();
+            return false;
+        }
+    }
+
+    private List<Movie> getFavoriteMoviesList() {
+        SharedPreferences sharedPreferences = mViewBinderWR.get().getContext().getSharedPreferences(MovieDetailsPresenter.FAVORITE_PREFERENCES, 0);
+        Map<String, ?> map = sharedPreferences.getAll();
+        Iterator mapIterator = map.entrySet().iterator();
+        List<Movie> movieList = new ArrayList<>();
+
+        while (mapIterator.hasNext()) {
+            Map.Entry pair = (Map.Entry) mapIterator.next();
+            if (containtsMoviePosterUri(pair)) {
+                movieList.add( new Gson().fromJson((String) pair.getValue(), Movie.class));
+            }
+        }
+        return movieList;
+    }
+
+    private int getMovieIDFromFavoriteEntry(Map.Entry pair) {
+        String key = (String) pair.getKey();
+        return Integer.valueOf(key.substring(MovieDetailsPresenter.FAV_MOVIE_JSON_KEY_PREFIX.length(), key.length()));
+    }
+
+    private boolean containtsMoviePosterUri(Map.Entry pair) {
+        return ((String) pair.getKey()).contains(MovieDetailsPresenter.FAV_MOVIE_JSON_KEY_PREFIX);
     }
 
     private void executeBackgroundNetworkRequest(Uri requestUri, Uri requestUri2, Uri requestUri3) {
@@ -134,4 +186,17 @@ public class MainActivityPresenter {
         return mCurrentSortOption;
     }
 
+    public void setCurrentSortOptionBasedOnTitle(String currentSortOptionBasedOnTitle) {
+        switch (currentSortOptionBasedOnTitle) {
+            case MY_FAVORITE_MOVIES_TITLE:
+                mCurrentSortOption = SHOW_FAVORITES;
+                break;
+            case TOP_RATED_MOVIES_TITLE:
+                mCurrentSortOption = NetworkUtils.TOP_RATED_END_POINT;
+                break;
+            case POPULAR_MOVIES_NOW_TITLE:
+                mCurrentSortOption = NetworkUtils.MOST_POPULAR_END_POINT;
+                break;
+        }
+    }
 }

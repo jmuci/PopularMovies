@@ -5,12 +5,14 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.example.jmucientes.popularmovies.model.Movie;
 import com.example.jmucientes.popularmovies.model.Review;
 import com.example.jmucientes.popularmovies.model.VideoTrailer;
 import com.example.jmucientes.popularmovies.util.NetworkUtils;
 import com.example.jmucientes.popularmovies.util.ReviewJsonParser;
 import com.example.jmucientes.popularmovies.util.VideoTrailerJsonParser;
 import com.example.jmucientes.popularmovies.view.MovieDetailsViewBinder;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 
@@ -20,8 +22,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 
-import javax.inject.Inject;
-
 import rx.Single;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -30,7 +30,8 @@ import rx.schedulers.Schedulers;
 public class MovieDetailsPresenter {
 
     public static final String FAVORITE_PREFERENCES = "FavoritePreferences";
-    private static final String KEY_PREFIX = "fav_";
+    public static final String IS_FAV_KEY_PREFIX = "is_fav_";
+    public static final String FAV_MOVIE_JSON_KEY_PREFIX = "fav_poster_";
     private WeakReference<MovieDetailsViewBinder> mDetailsViewBinderWR;
     private final String TAG = MovieDetailsPresenter.class.getName();
 
@@ -48,7 +49,7 @@ public class MovieDetailsPresenter {
         });
     }
 
-    public void requestReviewsForMoview(int id) {
+    public void requestReviewsForMovie(int id) {
         Uri requestUri = NetworkUtils.buildRequestUriForMovieReviews(id);
         executeBackgroundNetworkRequest(requestUri, new GeneralParser() {
             @Override
@@ -60,17 +61,24 @@ public class MovieDetailsPresenter {
 
     public boolean isMovieFavorite(int id) {
         SharedPreferences pref = mDetailsViewBinderWR.get().getContext().getSharedPreferences(FAVORITE_PREFERENCES, 0);
-        return pref.getBoolean(KEY_PREFIX + id, false);
+        return pref.getBoolean(IS_FAV_KEY_PREFIX + id, false);
     }
 
-    public void updateIsFavoriteStatus(int id) {
+    public void updateIsFavoriteStatus(Movie movie) {
         SharedPreferences pref = mDetailsViewBinderWR.get().getContext().getSharedPreferences(FAVORITE_PREFERENCES, 0); // 0 - for private mode
-        String key = KEY_PREFIX + id;
-        boolean isFavOldValue = pref.getBoolean(key, false);
+        String isSavedToFavoritesKey = IS_FAV_KEY_PREFIX + movie.getId();
+        boolean isFavOldValue = pref.getBoolean(isSavedToFavoritesKey, false);
         SharedPreferences.Editor editor = pref.edit();
-        editor.putBoolean(key, !isFavOldValue); // Invert the previous value
+        editor.putBoolean(isSavedToFavoritesKey, !isFavOldValue); // Invert the previous value
+
+        String favoriteMovieJsonKey = FAV_MOVIE_JSON_KEY_PREFIX + movie.getId();
+        if (!isFavOldValue) { // Movie wasn't saved in favorites
+            editor.putString(favoriteMovieJsonKey, new Gson().toJson(movie));
+        } else {
+            editor.remove(favoriteMovieJsonKey);
+        }
         editor.apply();
-        Log.d(TAG, String.format(Locale.getDefault(), "Successfully updated key %s to %s ", key, !isFavOldValue));
+        Log.d(TAG, String.format(Locale.getDefault(), "Successfully updated key %s to %s ", isSavedToFavoritesKey, !isFavOldValue));
     }
 
     interface GeneralParser {

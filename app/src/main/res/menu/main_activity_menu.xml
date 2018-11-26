@@ -10,4 +10,9 @@
         android:orderInCategory="2"
         android:icon="@android:drawable/ic_menu_sort_alphabetically"
         android:title="@string/order_top_results" />
+
+    <item android:id="@+id/order_favorites"
+        android:orderInCategory="3"
+        android:icon="@drawable/baseline_favorite_white_24"
+        android:title="@string/order_favorites" />
 </menu>

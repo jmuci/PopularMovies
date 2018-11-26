@@ -1,5 +1,6 @@
 package com.example.jmucientes.popularmovies;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -28,18 +29,23 @@ import dagger.android.support.DaggerAppCompatActivity;
 // TODO (Opt) Introduce Dagger
 // TODO (Opt) Load more films on Scroll https://medium.com/@programmerasi/how-to-implement-load-more-in-recyclerview-3c6358297f4
 // TODO (Opt) Unit Tests
+
 /**
  * Main entry point class for the PopularMovies App.
  * In this class mainly the updating of views is dealt with.
  */
-public class MainActivity extends DaggerAppCompatActivity implements MainActivityViewBinder{
+public class MainActivity extends DaggerAppCompatActivity implements MainActivityViewBinder {
 
     public static final int NUM_COLUMS_PORTRAIT = 2;
     public static final int NUM_COLUMS_LANDSCAPE = 4;
     private static final String TAG = MainActivity.class.getName();
-    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
-    @BindView(R.id.error_dialog_view) View mErrorView;
-    @BindView(R.id.error_msg_tv) TextView mErrorMessageTv;
+    private static final String TOOLBAR_TITLE = "toolbar_tilte";
+    @BindView(R.id.recycler_view)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.error_dialog_view)
+    View mErrorView;
+    @BindView(R.id.error_msg_tv)
+    TextView mErrorMessageTv;
 
     // Dagger 2 Injections
     @Inject
@@ -48,6 +54,8 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     MainActivityPresenter mMainActivityPresenter;
     @Inject
     List<Movie> mMovieList; //Initialized Empty //TODO Remove this list.
+
+    private String mToolBarTilte;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +73,24 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
             mMainActivityPresenter.requestTopRatedMoviesFromTheMovieDB();
         }
 
+        if (savedInstanceState != null) {
+            String title = savedInstanceState.getString(TOOLBAR_TITLE);
+            setToolBarTitle(title);
+            mMainActivityPresenter.setCurrentSortOptionBasedOnTitle(title);
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mMainActivityPresenter.getCurrentSortOption().equals(MainActivityPresenter.SHOW_FAVORITES)) {
+            boolean success = mMainActivityPresenter.showOnlyFavoriteMovies();
+            if (!success) {
+                mAdapter.clearDataSetWithoutNotifyDataSetChanged();
+                mMainActivityPresenter.requestTopRatedMoviesFromTheMovieDB();
+            }
+        }
     }
 
     private void setUpRecyclerView() {
@@ -102,6 +128,13 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
             if (!mMainActivityPresenter.getCurrentSortOption().equals(NetworkUtils.TOP_RATED_END_POINT)) {
                 mAdapter.clearDataSetWithoutNotifyDataSetChanged();
                 mMainActivityPresenter.requestTopRatedMoviesFromTheMovieDB();
+            }
+            return true;
+        }
+
+        if (id == R.id.order_favorites) {
+            if (!mMainActivityPresenter.getCurrentSortOption().equals(MainActivityPresenter.SHOW_FAVORITES)) {
+                mMainActivityPresenter.showOnlyFavoriteMovies();
             }
             return true;
         }
@@ -150,5 +183,22 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     private boolean isPortraitScreenConfiguration() {
         int orientation = getResources().getConfiguration().orientation;
         return orientation == Configuration.ORIENTATION_PORTRAIT;
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public void setToolBarTitle(String title) {
+        mToolBarTilte = title;
+        getSupportActionBar().setTitle(title);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(TOOLBAR_TITLE, mToolBarTilte);
+        super.onSaveInstanceState(outState);
     }
 }
