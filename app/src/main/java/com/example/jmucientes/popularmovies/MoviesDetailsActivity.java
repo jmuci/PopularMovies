@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -91,7 +90,7 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity implements Mo
         if (startingIntent != null && startingIntent.getSerializableExtra(MoviesAdapter.MOVIE_KEY) != null) {
             mMovie = (Movie) startingIntent.getSerializableExtra(MoviesAdapter.MOVIE_KEY);
             mMovieDetailsPresenter.requestTrailersForMovie(mMovie.getId());
-            mMovieDetailsPresenter.requestReviewsForMoview(mMovie.getId());
+            mMovieDetailsPresenter.requestReviewsForMovie(mMovie.getId());
             populateUI();
             setUpRecyclerView(mTrailersRV, mTrailersAdapter);
             setUpRecyclerView(mReviewsRV, mReviewsAdapter);
@@ -103,7 +102,7 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity implements Mo
         mFavoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mMovieDetailsPresenter.updateIsFavoriteStatus(mMovie.getId());
+                mMovieDetailsPresenter.updateIsFavoriteStatus(mMovie);
                 setIsFavoriteButtonStatus(mMovieDetailsPresenter.isMovieFavorite(mMovie.getId()));
             }
         });
