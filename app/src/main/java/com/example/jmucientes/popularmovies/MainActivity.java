@@ -36,10 +36,10 @@ import dagger.android.support.DaggerAppCompatActivity;
  */
 public class MainActivity extends DaggerAppCompatActivity implements MainActivityViewBinder {
 
-    public static final int NUM_COLUMS_PORTRAIT = 2;
-    public static final int NUM_COLUMS_LANDSCAPE = 4;
+    public static final int NAM_COLUMN_PORTRAIT = 2;
+    public static final int NAM_COLUMN_LANDSCAPE = 4;
     private static final String TAG = MainActivity.class.getName();
-    private static final String TOOLBAR_TITLE = "toolbar_tilte";
+    private static final String TOOLBAR_TITLE = "toolbar_title";
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
     @BindView(R.id.error_dialog_view)
@@ -96,9 +96,9 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     private void setUpRecyclerView() {
         mRecyclerView.setHasFixedSize(true);
         if (isPortraitScreenConfiguration()) {
-            mRecyclerView.setLayoutManager(new GridLayoutManager(this, NUM_COLUMS_PORTRAIT));
+            mRecyclerView.setLayoutManager(new GridLayoutManager(this, NAM_COLUMN_PORTRAIT));
         } else { // Landscape configuration user more columns.
-            mRecyclerView.setLayoutManager(new GridLayoutManager(this, NUM_COLUMS_LANDSCAPE));
+            mRecyclerView.setLayoutManager(new GridLayoutManager(this, NAM_COLUMN_LANDSCAPE));
         }
 
         mRecyclerView.setAdapter(mAdapter);
@@ -117,7 +117,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
 
         // To optimize, we only send a request if the user clicks on a different sort mode.
         if (id == R.id.open_order_most_pop) {
-            if (!mMainActivityPresenter.getCurrentSortOption().equals(NetworkUtils.MOST_POPULAR_END_POINT)) {
+            if (!NetworkUtils.MOST_POPULAR_END_POINT.equals(mMainActivityPresenter.getCurrentSortOption())) {
                 mAdapter.clearDataSetWithoutNotifyDataSetChanged();
                 mMainActivityPresenter.requestMostPopularMoviesFromTheMovieDB();
             }
@@ -125,7 +125,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         }
 
         if (id == R.id.order_top_movies) {
-            if (!mMainActivityPresenter.getCurrentSortOption().equals(NetworkUtils.TOP_RATED_END_POINT)) {
+            if (!NetworkUtils.TOP_RATED_END_POINT.equals(mMainActivityPresenter.getCurrentSortOption())) {
                 mAdapter.clearDataSetWithoutNotifyDataSetChanged();
                 mMainActivityPresenter.requestTopRatedMoviesFromTheMovieDB();
             }
@@ -133,7 +133,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         }
 
         if (id == R.id.order_favorites) {
-            if (!mMainActivityPresenter.getCurrentSortOption().equals(MainActivityPresenter.SHOW_FAVORITES)) {
+            if (!MainActivityPresenter.SHOW_FAVORITES.equals(mMainActivityPresenter.getCurrentSortOption())) {
                 mMainActivityPresenter.showOnlyFavoriteMovies();
             }
             return true;
