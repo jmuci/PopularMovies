@@ -14,8 +14,8 @@ import android.widget.TextView;
 
 import com.example.jmucientes.popularmovies.adapter.MoviesAdapter;
 import com.example.jmucientes.popularmovies.model.Movie;
+import com.example.jmucientes.popularmovies.model.MoviesViewModel;
 import com.example.jmucientes.popularmovies.presenters.MainActivityPresenter;
-import com.example.jmucientes.popularmovies.util.NetworkUtils;
 import com.example.jmucientes.popularmovies.view.MainActivityViewBinder;
 
 import java.util.List;
@@ -117,7 +117,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
 
         // To optimize, we only send a request if the user clicks on a different sort mode.
         if (id == R.id.open_order_most_pop) {
-            if (!NetworkUtils.MOST_POPULAR_END_POINT.equals(mMainActivityPresenter.getCurrentSortOption())) {
+            if (!MainActivityPresenter.SHOW_MOST_POPULAR.equals(mMainActivityPresenter.getCurrentSortOption())) {
                 mAdapter.clearDataSetWithoutNotifyDataSetChanged();
                 mMainActivityPresenter.requestMostPopularMoviesFromTheMovieDB();
             }
@@ -125,7 +125,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         }
 
         if (id == R.id.order_top_movies) {
-            if (!NetworkUtils.TOP_RATED_END_POINT.equals(mMainActivityPresenter.getCurrentSortOption())) {
+            if (!MainActivityPresenter.SHOW_TOP_RATED.equals(mMainActivityPresenter.getCurrentSortOption())) {
                 mAdapter.clearDataSetWithoutNotifyDataSetChanged();
                 mMainActivityPresenter.requestTopRatedMoviesFromTheMovieDB();
             }

@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import com.example.jmucientes.popularmovies.MoviesDetailsActivity;
 import com.example.jmucientes.popularmovies.R;
 import com.example.jmucientes.popularmovies.model.Movie;
-import com.example.jmucientes.popularmovies.util.NetworkUtils;
+import com.example.jmucientes.popularmovies.util.ImageUriUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -68,7 +68,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
-        Uri fullImageUri = NetworkUtils.getFullyQualifiedImageUri(mDataSet.get(position).getImageUri());
+        Uri fullImageUri = ImageUriUtils.getFullyQualifiedImageUri(mDataSet.get(position).getImageUri());
         Picasso.with(mContext)
                 .load(fullImageUri)
                 .placeholder(R.drawable.baseline_cloud_download_black_36)
