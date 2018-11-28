@@ -4,6 +4,7 @@ import com.example.jmucientes.popularmovies.MainActivity;
 import com.example.jmucientes.popularmovies.adapter.MoviesAdapter;
 import com.example.jmucientes.popularmovies.di.scopes.ActivityScope;
 import com.example.jmucientes.popularmovies.model.Movie;
+import com.example.jmucientes.popularmovies.network.MoviesWebService;
 import com.example.jmucientes.popularmovies.presenters.MainActivityPresenter;
 
 import java.util.ArrayList;
@@ -17,8 +18,8 @@ public class MainModule {
 
     @Provides
     @ActivityScope
-    MainActivityPresenter providesMainActivityPresenter(MainActivity viewBinder) {
-        return new MainActivityPresenter(viewBinder);
+    MainActivityPresenter providesMainActivityPresenter(MainActivity viewBinder, MoviesWebService moviesWebService) {
+        return new MainActivityPresenter(viewBinder, moviesWebService);
     }
 
     @Provides

@@ -4,14 +4,12 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.jmucientes.popularmovies.MainActivity;
 import com.example.jmucientes.popularmovies.model.Movie;
 import com.example.jmucientes.popularmovies.network.MoviesWebService;
 import com.example.jmucientes.popularmovies.util.MovieJsonParser;
-import com.example.jmucientes.popularmovies.util.NetworkUtils;
 import com.example.jmucientes.popularmovies.view.MainActivityViewBinder;
 import com.google.gson.Gson;
 
@@ -53,11 +51,10 @@ public class MainActivityPresenter {
 
     private MoviesWebService mMoviesWebService;
 
-    public MainActivityPresenter(@NonNull MainActivityViewBinder viewBinder) {
+    public MainActivityPresenter(@NonNull MainActivityViewBinder viewBinder, MoviesWebService moviesWebService) {
         mViewBinderWR = new WeakReference<>(checkNotNull(viewBinder));
         mCurrentSortOption = SHOW_TOP_RATED;
-        // TODO Replace with Dagger 2
-        mMoviesWebService = new MoviesWebService();
+        mMoviesWebService = moviesWebService;
     }
 
     /**
@@ -65,9 +62,9 @@ public class MainActivityPresenter {
      */
     public void requestTopRatedMoviesFromTheMovieDB() {
         mCurrentSortOption = SHOW_TOP_RATED;
-        Uri requestUri = mMoviesWebService.buildRequestUriForMoviesWithEndPoint(NetworkUtils.TOP_RATED_END_POINT, "1");
-        Uri requestUri2 = mMoviesWebService.buildRequestUriForMoviesWithEndPoint(NetworkUtils.TOP_RATED_END_POINT,"2");
-        Uri requestUri3 = mMoviesWebService.buildRequestUriForMoviesWithEndPoint(NetworkUtils.TOP_RATED_END_POINT,"3");
+        Uri requestUri = mMoviesWebService.buildRequestUriForMoviesWithEndPoint(MoviesWebService.TOP_RATED_END_POINT, "1");
+        Uri requestUri2 = mMoviesWebService.buildRequestUriForMoviesWithEndPoint(MoviesWebService.TOP_RATED_END_POINT,"2");
+        Uri requestUri3 = mMoviesWebService.buildRequestUriForMoviesWithEndPoint(MoviesWebService.TOP_RATED_END_POINT,"3");
         executeBackgroundNetworkRequest(requestUri, requestUri2, requestUri3);
         mViewBinderWR.get().setToolBarTitle(TOP_RATED_MOVIES_TITLE);
     }
@@ -77,9 +74,9 @@ public class MainActivityPresenter {
      */
     public void requestMostPopularMoviesFromTheMovieDB() {
         mCurrentSortOption = SHOW_MOST_POPULAR;
-        Uri requestUri = mMoviesWebService.buildRequestUriForMoviesWithEndPoint(NetworkUtils.MOST_POPULAR_END_POINT, "1");
-        Uri requestUri2 = mMoviesWebService.buildRequestUriForMoviesWithEndPoint(NetworkUtils.MOST_POPULAR_END_POINT,"2");
-        Uri requestUri3 = mMoviesWebService.buildRequestUriForMoviesWithEndPoint(NetworkUtils.MOST_POPULAR_END_POINT, "3");
+        Uri requestUri = mMoviesWebService.buildRequestUriForMoviesWithEndPoint(MoviesWebService.MOST_POPULAR_END_POINT, "1");
+        Uri requestUri2 = mMoviesWebService.buildRequestUriForMoviesWithEndPoint(MoviesWebService.MOST_POPULAR_END_POINT,"2");
+        Uri requestUri3 = mMoviesWebService.buildRequestUriForMoviesWithEndPoint(MoviesWebService.MOST_POPULAR_END_POINT, "3");
         executeBackgroundNetworkRequest(requestUri, requestUri2, requestUri3);
         mViewBinderWR.get().setToolBarTitle(POPULAR_MOVIES_NOW_TITLE);
     }
@@ -173,7 +170,7 @@ public class MainActivityPresenter {
             @Override
             public String call() throws Exception {
                 try {
-                    return NetworkUtils.makeRequest(requestUri);
+                    return mMoviesWebService.makeRequest(requestUri);
                 } catch (IOException e) {
                     String msg = "IOException. Failed to fetch movies list. Error: " + e.getMessage();
                     Log.e(TAG, msg);

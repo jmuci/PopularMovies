@@ -6,17 +6,11 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.example.jmucientes.popularmovies.BuildConfig;
-import com.example.jmucientes.popularmovies.model.Review;
-import com.example.jmucientes.popularmovies.model.VideoTrailer;
-import com.example.jmucientes.popularmovies.presenters.MovieDetailsPresenter;
-import com.example.jmucientes.popularmovies.util.NetworkUtils;
-import com.example.jmucientes.popularmovies.util.ReviewJsonParser;
-import com.example.jmucientes.popularmovies.util.VideoTrailerJsonParser;
+import com.example.jmucientes.popularmovies.util.ImageUriUtils;
 
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.Callable;
 
 import okhttp3.OkHttpClient;
@@ -35,18 +29,13 @@ public class MoviesWebService {
 
     private static final String API_KEY_PARAM = "api_key";
     private static final String PERSONAL_API_KEY = BuildConfig.TheMovieApiKey;
-    private static final String TAG = NetworkUtils.class.getName();
+    private static final String TAG = ImageUriUtils.class.getName();
     private static final String PATH = "t/p";
     private static final String IMAGES_AUTH = "image.tmdb.org";
     private static final String VERSION_SEGMENT = "3";
 
     public static final String PAGE_KEY = "page";
     public static final String DEFAULT_TO_FIRST_PAGE = "1";
-
-    // TODO This should be an ENUM to guarentee a valid size
-    public static final String IMAGE_SIZE_W_185 = "w185";
-    public static final String IMAGE_SIZE_W_342 = "w342";
-    public static final String IMAGE_SIZE_W_500 = "w500";
 
     public static final String TOP_RATED_END_POINT = "top_rated";
     public static final String MOST_POPULAR_END_POINT = "popular";
@@ -126,32 +115,6 @@ public class MoviesWebService {
     }
 
     /**
-     * The base URL will look like: http://image.tmdb.org/t/p/.
-     * Then you will need a ‘size’, which will be one of the following: "w92", "w154", "w185", "w342", "w500", "w780", or "original". For most phones we recommend using “w185”.
-     * And finally the poster path returned by the query, in this case “/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg”
-     * @param imagePath String
-     * @return Uri
-     */
-    @NonNull
-    public Uri getFullyQualifiedImageUri(@NonNull String imagePath) {
-        return getFullyQualifiedImageUri(imagePath, IMAGE_SIZE_W_185);
-    }
-
-    @NonNull
-    public Uri getFullyQualifiedImageUri(@NonNull String imagePath, @NonNull String imageSize) {
-        if (imagePath.length() > 0 && '/' == (imagePath.charAt(0))) { //Remove extra slash
-            imagePath = imagePath.substring(1, imagePath.length());
-        }
-        Uri.Builder builder = new Uri.Builder();
-        return builder.scheme(HTTP_SCHEME)
-                .authority(IMAGES_AUTH)
-                .path(PATH)
-                .appendPath(imageSize)
-                .appendPath(imagePath)
-                .build();
-    }
-
-    /**
      * Make a network request using the requestUri using OkHttp client.
      * This method shouldn't be run on the Main Thread.
      *
@@ -223,7 +186,7 @@ public class MoviesWebService {
             @Override
             public String call() throws Exception {
                 try {
-                    return NetworkUtils.makeRequest(requestUri);
+                    return makeRequest(requestUri);
                 } catch (IOException e) {
                     String msg = "IOException. Failed to fetch movies list. Error: " + e.getMessage();
                     Log.e(TAG, msg);
