@@ -8,6 +8,7 @@ import android.util.Log;
 import com.example.jmucientes.popularmovies.model.Movie;
 import com.example.jmucientes.popularmovies.model.Review;
 import com.example.jmucientes.popularmovies.model.VideoTrailer;
+import com.example.jmucientes.popularmovies.network.MoviesWebService;
 import com.example.jmucientes.popularmovies.util.NetworkUtils;
 import com.example.jmucientes.popularmovies.util.ReviewJsonParser;
 import com.example.jmucientes.popularmovies.util.VideoTrailerJsonParser;
@@ -35,13 +36,17 @@ public class MovieDetailsPresenter {
     private WeakReference<MovieDetailsViewBinder> mDetailsViewBinderWR;
     private final String TAG = MovieDetailsPresenter.class.getName();
 
+    private final MoviesWebService mMoviesWebService;
+
     public MovieDetailsPresenter(MovieDetailsViewBinder viewBinder) {
         mDetailsViewBinderWR = new WeakReference<>(viewBinder);
+        //TODO Add with Dagger2
+        mMoviesWebService = new MoviesWebService();
     }
 
     public void requestTrailersForMovie(int id) {
         Uri requestUri = NetworkUtils.buildRequestUriForMovieTrailers(id);
-        executeBackgroundNetworkRequest(requestUri, new GeneralParser() {
+        mMoviesWebService.executeBackgroundNetworkRequest(requestUri, new MoviesWebService.GeneralParser() {
             @Override
             public void parseResultsAndUpdateAdapter(String jsonResponse) throws JSONException {
                 parseTrailersResultsAndUpdateAdapter(jsonResponse);
@@ -51,7 +56,7 @@ public class MovieDetailsPresenter {
 
     public void requestReviewsForMovie(int id) {
         Uri requestUri = NetworkUtils.buildRequestUriForMovieReviews(id);
-        executeBackgroundNetworkRequest(requestUri, new GeneralParser() {
+        mMoviesWebService.executeBackgroundNetworkRequest(requestUri, new MoviesWebService.GeneralParser() {
             @Override
             public void parseResultsAndUpdateAdapter(String jsonResponse) throws JSONException {
                 parseReviewsResultsAndUpdateAdapter(jsonResponse);
@@ -81,7 +86,7 @@ public class MovieDetailsPresenter {
         Log.d(TAG, String.format(Locale.getDefault(), "Successfully updated key %s to %s ", isSavedToFavoritesKey, !isFavOldValue));
     }
 
-    interface GeneralParser {
+   /* interface GeneralParser {
         void parseResultsAndUpdateAdapter(String jsonResponse) throws JSONException;
     }
 
@@ -118,7 +123,7 @@ public class MovieDetailsPresenter {
                 }
                 });
     }
-
+*/
     private void parseTrailersResultsAndUpdateAdapter(String jsonString) throws JSONException {
         List<VideoTrailer> trailersList = null;
         trailersList = VideoTrailerJsonParser.parseTrailersListJsonResponse(jsonString);
@@ -140,27 +145,26 @@ public class MovieDetailsPresenter {
             Log.e(TAG, "View binder is null! The activity was destroyed before the results arrive?");
         }
     }
-
-    /**
-     *
-     * @param requestUri
-     * @return
-     */
-
-    private Single<String> makeRequestSingleObvservable(@NonNull final Uri requestUri) {
-        return Single.fromCallable(new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                try {
-                    return NetworkUtils.makeRequest(requestUri);
-                } catch (IOException e) {
-                    String msg = "IOException. Failed to fetch movies list. Error: " + e.getMessage();
-                    Log.e(TAG, msg);
-                    return null;
-                }
-            }
-        });
-    }
-
-
+//
+//    /**
+//     *
+//     * @param requestUri
+//     * @return
+//     */
+//
+//    private Single<String> makeRequestSingleObvservable(@NonNull final Uri requestUri) {
+//        return Single.fromCallable(new Callable<String>() {
+//            @Override
+//            public String call() throws Exception {
+//                try {
+//                    return NetworkUtils.makeRequest(requestUri);
+//                } catch (IOException e) {
+//                    String msg = "IOException. Failed to fetch movies list. Error: " + e.getMessage();
+//                    Log.e(TAG, msg);
+//                    return null;
+//                }
+//            }
+//        });
+//    }
+//
 }

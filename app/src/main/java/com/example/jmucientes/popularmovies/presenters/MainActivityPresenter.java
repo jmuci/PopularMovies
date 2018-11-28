@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.example.jmucientes.popularmovies.MainActivity;
 import com.example.jmucientes.popularmovies.model.Movie;
+import com.example.jmucientes.popularmovies.network.MoviesWebService;
 import com.example.jmucientes.popularmovies.util.MovieJsonParser;
 import com.example.jmucientes.popularmovies.util.NetworkUtils;
 import com.example.jmucientes.popularmovies.view.MainActivityViewBinder;
@@ -40,6 +41,8 @@ import static android.support.v4.util.Preconditions.checkNotNull;
 public class MainActivityPresenter {
     private static final String TAG  = MainActivity.class.getName();
     public static final String SHOW_FAVORITES = "show_favorites_order";
+    public static final String SHOW_TOP_RATED = "show_top_rated_order";
+    public static final String SHOW_MOST_POPULAR = "show_most_pop_order";
     //TODO Move to string resources
     public static final String TOP_RATED_MOVIES_TITLE = "Top Rated Movies";
     public static final String POPULAR_MOVIES_NOW_TITLE = "Popular Movies Now";
@@ -48,19 +51,23 @@ public class MainActivityPresenter {
     private WeakReference<MainActivityViewBinder> mViewBinderWR;
     private String mCurrentSortOption;
 
+    private MoviesWebService mMoviesWebService;
+
     public MainActivityPresenter(@NonNull MainActivityViewBinder viewBinder) {
         mViewBinderWR = new WeakReference<>(checkNotNull(viewBinder));
-        mCurrentSortOption = NetworkUtils.TOP_RATED_END_POINT;
+        mCurrentSortOption = SHOW_TOP_RATED;
+        // TODO Replace with Dagger 2
+        mMoviesWebService = new MoviesWebService();
     }
 
     /**
      * Executes a request to the Top Rated end point.
      */
     public void requestTopRatedMoviesFromTheMovieDB() {
-        mCurrentSortOption = NetworkUtils.TOP_RATED_END_POINT;
-        Uri requestUri = NetworkUtils.buildRequestUriForMoviesWithEndPoint(NetworkUtils.TOP_RATED_END_POINT, "1");
-        Uri requestUri2 = NetworkUtils.buildRequestUriForMoviesWithEndPoint(NetworkUtils.TOP_RATED_END_POINT,"2");
-        Uri requestUri3 = NetworkUtils.buildRequestUriForMoviesWithEndPoint(NetworkUtils.TOP_RATED_END_POINT,"3");
+        mCurrentSortOption = SHOW_TOP_RATED;
+        Uri requestUri = mMoviesWebService.buildRequestUriForMoviesWithEndPoint(NetworkUtils.TOP_RATED_END_POINT, "1");
+        Uri requestUri2 = mMoviesWebService.buildRequestUriForMoviesWithEndPoint(NetworkUtils.TOP_RATED_END_POINT,"2");
+        Uri requestUri3 = mMoviesWebService.buildRequestUriForMoviesWithEndPoint(NetworkUtils.TOP_RATED_END_POINT,"3");
         executeBackgroundNetworkRequest(requestUri, requestUri2, requestUri3);
         mViewBinderWR.get().setToolBarTitle(TOP_RATED_MOVIES_TITLE);
     }
@@ -69,10 +76,10 @@ public class MainActivityPresenter {
      * Executes a request to the most popular end point.
      */
     public void requestMostPopularMoviesFromTheMovieDB() {
-        mCurrentSortOption = NetworkUtils.MOST_POPULAR_END_POINT;
-        Uri requestUri = NetworkUtils.buildRequestUriForMoviesWithEndPoint(NetworkUtils.MOST_POPULAR_END_POINT, "1");
-        Uri requestUri2 = NetworkUtils.buildRequestUriForMoviesWithEndPoint(NetworkUtils.MOST_POPULAR_END_POINT,"2");
-        Uri requestUri3 = NetworkUtils.buildRequestUriForMoviesWithEndPoint(NetworkUtils.MOST_POPULAR_END_POINT, "3");
+        mCurrentSortOption = SHOW_MOST_POPULAR;
+        Uri requestUri = mMoviesWebService.buildRequestUriForMoviesWithEndPoint(NetworkUtils.MOST_POPULAR_END_POINT, "1");
+        Uri requestUri2 = mMoviesWebService.buildRequestUriForMoviesWithEndPoint(NetworkUtils.MOST_POPULAR_END_POINT,"2");
+        Uri requestUri3 = mMoviesWebService.buildRequestUriForMoviesWithEndPoint(NetworkUtils.MOST_POPULAR_END_POINT, "3");
         executeBackgroundNetworkRequest(requestUri, requestUri2, requestUri3);
         mViewBinderWR.get().setToolBarTitle(POPULAR_MOVIES_NOW_TITLE);
     }
@@ -103,11 +110,6 @@ public class MainActivityPresenter {
             }
         }
         return movieList;
-    }
-
-    private int getMovieIDFromFavoriteEntry(Map.Entry pair) {
-        String key = (String) pair.getKey();
-        return Integer.valueOf(key.substring(MovieDetailsPresenter.FAV_MOVIE_JSON_KEY_PREFIX.length(), key.length()));
     }
 
     private boolean containtsMoviePosterUri(Map.Entry pair) {
@@ -192,10 +194,10 @@ public class MainActivityPresenter {
                 mCurrentSortOption = SHOW_FAVORITES;
                 break;
             case TOP_RATED_MOVIES_TITLE:
-                mCurrentSortOption = NetworkUtils.TOP_RATED_END_POINT;
+                mCurrentSortOption = TOP_RATED_MOVIES_TITLE;
                 break;
             case POPULAR_MOVIES_NOW_TITLE:
-                mCurrentSortOption = NetworkUtils.MOST_POPULAR_END_POINT;
+                mCurrentSortOption = POPULAR_MOVIES_NOW_TITLE;
                 break;
         }
     }
