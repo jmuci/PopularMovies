@@ -1,8 +1,12 @@
 package com.example.jmucientes.popularmovies;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -54,7 +58,10 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     MainActivityPresenter mMainActivityPresenter;
     @Inject
     List<Movie> mMovieList; //Initialized Empty //TODO Remove this list.
+    @Inject
+    ViewModelProvider.Factory viewModelFactory;
 
+    private MoviesViewModel mMoviesViewModel;
     private String mToolBarTilte;
 
     @Override
@@ -64,15 +71,21 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         ButterKnife.bind(this);
 
         setUpRecyclerView();
+        //mMoviesViewModel = ViewModelProviders.of(this).get(MoviesViewModel.class);
+        mMoviesViewModel = ViewModelProviders.of(this, viewModelFactory)
+                .get(MoviesViewModel.class);
+/*        mMoviesViewModel.getTopMovieList().observe(this, movies -> {
+            updateAdapterContent(movies, false);
+        });*/
+        mMoviesViewModel.getTopMovieList().observe(this, new Observer<List<Movie>>() {
+            @Override
+            public void onChanged(@Nullable List<Movie> movies) {
+                updateAdapterContent(movies, false);
 
-        // If we had saved configuration, restore the dataSet without hitting the backend.
-        List<Movie> retainedDataSet = (List<Movie>) getLastCustomNonConfigurationInstance();
-        if (retainedDataSet != null && retainedDataSet.size() > 0) {
-            mAdapter.updateDataSet(retainedDataSet);
-        } else {
-            mMainActivityPresenter.requestTopRatedMoviesFromTheMovieDB();
-        }
+            }
+        });
 
+        //TODO This crashes on rotation. Can title use live Data?
         if (savedInstanceState != null) {
             String title = savedInstanceState.getString(TOOLBAR_TITLE);
             setToolBarTitle(title);

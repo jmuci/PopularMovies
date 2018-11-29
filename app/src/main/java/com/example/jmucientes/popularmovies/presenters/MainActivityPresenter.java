@@ -185,6 +185,10 @@ public class MainActivityPresenter {
         return mCurrentSortOption;
     }
 
+    public void setCurrentSortOption(String sortOption) {
+        mCurrentSortOption = sortOption;
+    }
+
     public void setCurrentSortOptionBasedOnTitle(String currentSortOptionBasedOnTitle) {
         switch (currentSortOptionBasedOnTitle) {
             case MY_FAVORITE_MOVIES_TITLE:
