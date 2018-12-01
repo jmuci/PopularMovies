@@ -1,8 +1,8 @@
 package com.example.jmucientes.popularmovies.di;
 
 import com.example.jmucientes.popularmovies.di.scopes.ApplicationScope;
-import com.example.jmucientes.popularmovies.model.MoviesViewModel;
 import com.example.jmucientes.popularmovies.network.MoviesWebService;
+import com.example.jmucientes.popularmovies.repository.MovieListInMemoryCache;
 import com.example.jmucientes.popularmovies.repository.MoviesRepository;
 
 import dagger.Module;
@@ -17,15 +17,15 @@ public abstract class MovieAppModule {
         return new MoviesWebService();
     }
 
-/*    @Provides
+    @Provides
     @ApplicationScope
-    static MoviesViewModel providesMoviesViewModel() {
-        return new MoviesViewModel();
-    }*/
+    static MoviesRepository providesMoviesRepository(MoviesWebService moviesWebService, MovieListInMemoryCache movieListCache) {
+        return new MoviesRepository(moviesWebService, movieListCache);
+    }
 
     @Provides
     @ApplicationScope
-    static MoviesRepository providesMoviesRepository(MoviesWebService moviesWebService) {
-        return new MoviesRepository(moviesWebService);
+    static MovieListInMemoryCache providesMoviesListInMemoryCahce() {
+        return new MovieListInMemoryCache();
     }
 }

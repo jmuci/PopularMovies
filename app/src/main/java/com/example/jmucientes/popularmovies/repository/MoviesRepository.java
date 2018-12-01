@@ -16,8 +16,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import javax.inject.Inject;
-
 import rx.Single;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -28,12 +26,19 @@ public class MoviesRepository {
     private static final String TAG = MoviesRepository.class.getName();
 
     final MoviesWebService mMoviesWebService;
+    final MovieListInMemoryCache mMovieListCache;
 
-    public MoviesRepository(MoviesWebService moviesWebService) {
+    public MoviesRepository(MoviesWebService moviesWebService, MovieListInMemoryCache movieListCache) {
         mMoviesWebService = moviesWebService;
+        mMovieListCache = movieListCache;
     }
 
     public void getTopRatedMovieList(MutableLiveData<List<Movie>> movieList) {
+
+        List<Movie> cached = mMovieListCache.getTopRatedMoviesList();
+        if (cached != null) {
+            movieList.setValue(cached);
+        }
 
         Uri requestUri = mMoviesWebService.buildRequestUriForMoviesWithEndPoint(MoviesWebService.TOP_RATED_END_POINT, "1");
         Uri requestUri2 = mMoviesWebService.buildRequestUriForMoviesWithEndPoint(MoviesWebService.TOP_RATED_END_POINT,"2");
@@ -75,19 +80,19 @@ public class MoviesRepository {
                             e.printStackTrace();
                             String msg = "JSON parsing error! Error : " + e.toString();
                             Log.e(TAG, msg);
-                            //mViewBinderWR.get().showErrorMessage(msg);
                         }
-/*                        if (movieList != null && movieList.size() > 0) {
-                            if (mViewBinderWR.get() != null) {
+                        if (movieList != null && movieList.size() > 0) {
+/*                            if (mViewBinderWR.get() != null) {
                                 mViewBinderWR.get().updateAdapterContent(movieList, true);
                             } else {
                                 Log.e(TAG, "View binder is null! The activity was destroyed before the results arrive?");
                             }
-                        } else {
+                        } else {*/
                             Log.w(TAG, "The movie list was empty.");
-                            mViewBinderWR.get().showErrorMessage("Empty movie list.");
+                            //mViewBinderWR.get().showErrorMessage("Empty movie list.");
 
-                        }*/
+                        }
+                        mMovieListCache.updateInMemoryCache(movieList);
                         data.setValue(movieList);
                     }
                 });
