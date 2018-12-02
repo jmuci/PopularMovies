@@ -1,10 +1,6 @@
 package com.example.jmucientes.popularmovies.di;
 
-import android.app.Application;
-import android.arch.lifecycle.ViewModelProvider;
-
 import com.example.jmucientes.popularmovies.MovieApp;
-import com.example.jmucientes.popularmovies.di.scopes.ActivityScope;
 import com.example.jmucientes.popularmovies.di.scopes.ApplicationScope;
 
 import dagger.BindsInstance;
@@ -24,7 +20,7 @@ public interface MovieAppComponent extends AndroidInjector<MovieApp> {
     interface Builder {
 
         @BindsInstance
-        MovieAppComponent.Builder application(Application application);
+        MovieAppComponent.Builder application(MovieApp application);
 
         MovieAppComponent build();
     }

@@ -117,6 +117,7 @@ public class MainActivityPresenter {
         Single<String> requestSingle = makeMoviesRequestSingleObvservable(requestUri);
         Single<String> requestSingle2 = makeMoviesRequestSingleObvservable(requestUri2);
         Single<String> requestSingle3 = makeMoviesRequestSingleObvservable(requestUri3);
+
         // Request the 3 first pages and merge the response.
         Single.merge(
                 requestSingle,

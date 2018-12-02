@@ -1,12 +1,10 @@
 package com.example.jmucientes.popularmovies;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -30,9 +28,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.DaggerAppCompatActivity;
 
-// TODO (Opt) Introduce Dagger
+import static com.example.jmucientes.popularmovies.presenters.MainActivityPresenter.TOP_RATED_MOVIES_TITLE;
+
 // TODO (Opt) Load more films on Scroll https://medium.com/@programmerasi/how-to-implement-load-more-in-recyclerview-3c6358297f4
 // TODO (Opt) Unit Tests
+// TODO (Opt) Use LiveData for all endpoints
 
 /**
  * Main entry point class for the PopularMovies App.
@@ -71,18 +71,10 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         ButterKnife.bind(this);
 
         setUpRecyclerView();
-        //mMoviesViewModel = ViewModelProviders.of(this).get(MoviesViewModel.class);
         mMoviesViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(MoviesViewModel.class);
-/*        mMoviesViewModel.getTopMovieList().observe(this, movies -> {
+        mMoviesViewModel.getTopMovieList().observe(this, movies -> {
             updateAdapterContent(movies, false);
-        });*/
-        mMoviesViewModel.getTopMovieList().observe(this, new Observer<List<Movie>>() {
-            @Override
-            public void onChanged(@Nullable List<Movie> movies) {
-                updateAdapterContent(movies, false);
-
-            }
         });
 
         //TODO This crashes on rotation. Can title use live Data?
@@ -90,6 +82,8 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
             String title = savedInstanceState.getString(TOOLBAR_TITLE);
             setToolBarTitle(title);
             mMainActivityPresenter.setCurrentSortOptionBasedOnTitle(title);
+        } else {
+            setToolBarTitle(TOP_RATED_MOVIES_TITLE);
         }
 
     }
@@ -100,8 +94,8 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         if (mMainActivityPresenter.getCurrentSortOption().equals(MainActivityPresenter.SHOW_FAVORITES)) {
             boolean success = mMainActivityPresenter.showOnlyFavoriteMovies();
             if (!success) {
-                mAdapter.clearDataSetWithoutNotifyDataSetChanged();
-                mMainActivityPresenter.requestTopRatedMoviesFromTheMovieDB();
+                //mAdapter.clearDataSetWithoutNotifyDataSetChanged();
+                //mMainActivityPresenter.requestTopRatedMoviesFromTheMovieDB();
             }
         }
     }
