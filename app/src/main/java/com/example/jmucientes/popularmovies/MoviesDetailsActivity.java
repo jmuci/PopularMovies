@@ -1,5 +1,7 @@
 package com.example.jmucientes.popularmovies;
 
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.AppBarLayout;
@@ -21,8 +23,10 @@ import com.example.jmucientes.popularmovies.model.Movie;
 import com.example.jmucientes.popularmovies.model.Review;
 import com.example.jmucientes.popularmovies.model.VideoTrailer;
 import com.example.jmucientes.popularmovies.presenters.MovieDetailsPresenter;
+import com.example.jmucientes.popularmovies.repository.MoviesRepository;
 import com.example.jmucientes.popularmovies.util.ImageUriUtils;
 import com.example.jmucientes.popularmovies.view.MovieDetailsViewBinder;
+import com.example.jmucientes.popularmovies.viewmodel.MoviesDetailsViewModel;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -77,8 +81,12 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity implements Mo
     TrailersAdapter mTrailersAdapter;
     @Inject
     MovieDetailsPresenter mMovieDetailsPresenter;
-
-    private boolean mIsFavorite;
+    @Inject
+    MoviesRepository mMoviesRepository;
+    @Inject
+    MoviesDetailsViewModel mMoviesDetailsViewModel;
+    @Inject
+    ViewModelProvider.Factory viewModelFactory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,12 +107,19 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity implements Mo
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
         setUpToolBar();
         appBarLayout.setMinimumHeight(R.dimen.event_entity_appbar_height);
-        mFavoriteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mMovieDetailsPresenter.updateIsFavoriteStatus(mMovie);
-                setIsFavoriteButtonStatus(mMovieDetailsPresenter.isMovieFavorite(mMovie.getId()));
-            }
+/*        mMoviesViewModel = ViewModelProviders.of(this, viewModelFactory)
+                .get(MoviesViewModel.class);*/
+
+
+        mMoviesDetailsViewModel = ViewModelProviders.of(this, viewModelFactory).get(MoviesDetailsViewModel.class);
+        mMoviesDetailsViewModel.isMovieFavorite(mMovie.getId()).
+                observe(this, this::setIsFavoriteButtonStatus);
+        mFavoriteButton.setOnClickListener(v -> {
+            //mMovieDetailsPresenter.updateIsFavoriteStatus(mMovie);
+            //etIsFavoriteButtonStatus(mMovieDetailsPresenter.isMovieFavoriteAsync(mMovie.getId()));
+            //mMoviesRepository.updateMovieFavoriteStatus(mMovie);
+            mMoviesDetailsViewModel.updateMovieFavoriteStatus(mMovie);
+
         });
     }
 
@@ -145,7 +160,7 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity implements Mo
                     .into(mPosterView);
 
             // Update FAB Save to Favorites Button State
-            setIsFavoriteButtonStatus(mMovieDetailsPresenter.isMovieFavorite(mMovie.getId()));
+            //setIsFavoriteButtonStatus(mMovieDetailsPresenter.isMovieFavoriteAsync(mMovie.getId()));
         }
     }
 

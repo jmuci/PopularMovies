@@ -1,5 +1,6 @@
 package com.example.jmucientes.popularmovies.model;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.text.TextUtils;
@@ -12,26 +13,35 @@ import java.io.Serializable;
  * for performance reasons when Bundling a Movie object to pass it to the DetailsActivity.
  */
 
-@Entity
+@Entity(tableName = "Movie")
 public class Movie implements Serializable {
 
     @PrimaryKey
+    @ColumnInfo(name = "id")
     private int id;
 
+    @ColumnInfo(name = "vote_average")
     private String vote_average;
 
+    @ColumnInfo(name = "backdrop_path")
     private String backdrop_path;
 
+    @ColumnInfo(name = "title")
     private String title;
 
+    @ColumnInfo(name = "overview")
     private String overview;
 
+    @ColumnInfo(name = "original_language")
     private String original_language;
 
+    @ColumnInfo(name = "release_date")
     private String release_date;
 
+    @ColumnInfo(name = "vote_count")
     private String vote_count;
 
+    @ColumnInfo(name = "poster_path")
     private String poster_path;
 
     public Movie(String vote_average, String backdrop_path, int id, String title, String overview, String original_language, String release_date, String vote_count, String poster_path) {

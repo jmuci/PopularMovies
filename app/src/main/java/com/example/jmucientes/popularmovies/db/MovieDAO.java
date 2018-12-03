@@ -15,12 +15,14 @@ import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 public interface MovieDAO {
 
     @Insert(onConflict = REPLACE)
-    void saveMovieToDB(Movie movie);
+    long saveMovieToDB(Movie movie);
 
-    @Query("SELECT * FROM movie WHERE id = :movieId")
+    @Query("SELECT * FROM Movie WHERE id = :movieId")
     LiveData<Movie> getMovieById(int movieId);
 
-    @Query("SELECT * FROM movie")
+    @Query("SELECT * FROM Movie")
     LiveData<List<Movie>> getAllFavoriteMovies();
 
+    @Query("DELETE FROM Movie WHERE id = :movieId")
+    void deleteMoveFromDB(int movieId);
 }

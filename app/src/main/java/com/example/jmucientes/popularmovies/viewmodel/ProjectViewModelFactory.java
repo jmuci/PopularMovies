@@ -1,4 +1,4 @@
-package com.example.jmucientes.popularmovies.model;
+package com.example.jmucientes.popularmovies.viewmodel;
 
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
@@ -12,11 +12,11 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 @ApplicationScope
-public class MoviesViewModelFactory implements ViewModelProvider.Factory {
+public class ProjectViewModelFactory implements ViewModelProvider.Factory {
     private final Map<Class<? extends ViewModel>, Provider<ViewModel>> creators;
 
     @Inject
-    public MoviesViewModelFactory(Map<Class<? extends ViewModel>, Provider<ViewModel>> creators) {
+    public ProjectViewModelFactory(Map<Class<? extends ViewModel>, Provider<ViewModel>> creators) {
         this.creators = creators;
     }
 

@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.example.jmucientes.popularmovies.adapter.MoviesAdapter;
 import com.example.jmucientes.popularmovies.model.Movie;
-import com.example.jmucientes.popularmovies.model.MoviesViewModel;
+import com.example.jmucientes.popularmovies.viewmodel.MoviesViewModel;
 import com.example.jmucientes.popularmovies.presenters.MainActivityPresenter;
 import com.example.jmucientes.popularmovies.view.MainActivityViewBinder;
 
@@ -73,9 +73,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         setUpRecyclerView();
         mMoviesViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(MoviesViewModel.class);
-        mMoviesViewModel.getTopMovieList().observe(this, movies -> {
-            updateAdapterContent(movies, false);
-        });
+        mMoviesViewModel.getTopMovieList().observe(this, movies -> updateAdapterContent(movies, false));
 
         //TODO This crashes on rotation. Can title use live Data?
         if (savedInstanceState != null) {
@@ -84,6 +82,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
             mMainActivityPresenter.setCurrentSortOptionBasedOnTitle(title);
         } else {
             setToolBarTitle(TOP_RATED_MOVIES_TITLE);
+            mMainActivityPresenter.setCurrentSortOption(MainActivityPresenter.SHOW_TOP_RATED);
         }
 
     }
@@ -125,23 +124,39 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         // To optimize, we only send a request if the user clicks on a different sort mode.
         if (id == R.id.open_order_most_pop) {
             if (!MainActivityPresenter.SHOW_MOST_POPULAR.equals(mMainActivityPresenter.getCurrentSortOption())) {
-                mAdapter.clearDataSetWithoutNotifyDataSetChanged();
-                mMainActivityPresenter.requestMostPopularMoviesFromTheMovieDB();
+/*                mAdapter.clearDataSetWithoutNotifyDataSetChanged();
+                mMainActivityPresenter.requestMostPopularMoviesFromTheMovieDB(); */
+                mMoviesViewModel.getMostPopularMovieList().observe(this, movies -> {
+                    updateAdapterContent(movies, false);
+                });
+                setToolBarTitle(MainActivityPresenter.POPULAR_MOVIES_NOW_TITLE);
+                mMainActivityPresenter.setCurrentSortOption(MainActivityPresenter.SHOW_MOST_POPULAR);
             }
             return true;
         }
 
         if (id == R.id.order_top_movies) {
             if (!MainActivityPresenter.SHOW_TOP_RATED.equals(mMainActivityPresenter.getCurrentSortOption())) {
-                mAdapter.clearDataSetWithoutNotifyDataSetChanged();
-                mMainActivityPresenter.requestTopRatedMoviesFromTheMovieDB();
+                /*mAdapter.clearDataSetWithoutNotifyDataSetChanged();
+                mMainActivityPresenter.requestTopRatedMoviesFromTheMovieDB();*/
+                mMoviesViewModel.getTopMovieList().observe(this, movies -> {
+                    updateAdapterContent(movies, false);
+                });
+                setToolBarTitle(MainActivityPresenter.TOP_RATED_MOVIES_TITLE);
+                mMainActivityPresenter.setCurrentSortOption(MainActivityPresenter.SHOW_TOP_RATED);
+
             }
             return true;
         }
 
         if (id == R.id.order_favorites) {
             if (!MainActivityPresenter.SHOW_FAVORITES.equals(mMainActivityPresenter.getCurrentSortOption())) {
-                mMainActivityPresenter.showOnlyFavoriteMovies();
+                //mMainActivityPresenter.showOnlyFavoriteMovies();
+                mMoviesViewModel.getFavoritesList().observe(this, movies -> {
+                    updateAdapterContent(movies, false);
+                });
+                setToolBarTitle(MainActivityPresenter.MY_FAVORITE_MOVIES_TITLE);
+                mMainActivityPresenter.setCurrentSortOption(MainActivityPresenter.SHOW_FAVORITES);
             }
             return true;
         }
