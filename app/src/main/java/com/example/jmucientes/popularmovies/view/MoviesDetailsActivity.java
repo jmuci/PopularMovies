@@ -1,5 +1,7 @@
 package com.example.jmucientes.popularmovies.view;
 
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.AppBarLayout;
@@ -24,6 +26,7 @@ import com.example.jmucientes.popularmovies.model.VideoTrailer;
 import com.example.jmucientes.popularmovies.presenters.MovieDetailsPresenter;
 import com.example.jmucientes.popularmovies.util.ImageUriUtils;
 import com.example.jmucientes.popularmovies.view.MovieDetailsViewBinder;
+import com.example.jmucientes.popularmovies.viewmodel.MovieViewModel;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -78,8 +81,11 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity implements Mo
     TrailersAdapter mTrailersAdapter;
     @Inject
     MovieDetailsPresenter mMovieDetailsPresenter;
+    @Inject
+    ViewModelProvider.Factory viewModelFactory;
 
     private boolean mIsFavorite;
+    private MovieViewModel mWordViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,12 +106,12 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity implements Mo
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
         setUpToolBar();
         appBarLayout.setMinimumHeight(R.dimen.event_entity_appbar_height);
-        mFavoriteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mMovieDetailsPresenter.updateIsFavoriteStatus(mMovie);
-                setIsFavoriteButtonStatus(mMovieDetailsPresenter.isMovieFavorite(mMovie.getId()));
-            }
+
+        mWordViewModel = ViewModelProviders.of(this, viewModelFactory).get(MovieViewModel.class);
+
+        mFavoriteButton.setOnClickListener(v -> {
+            mMovieDetailsPresenter.updateIsFavoriteStatus(mMovie);
+            setIsFavoriteButtonStatus(mMovieDetailsPresenter.isMovieFavorite(mMovie.getId()));
         });
     }
 

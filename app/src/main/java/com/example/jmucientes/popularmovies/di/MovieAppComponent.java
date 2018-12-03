@@ -14,6 +14,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
 @Component(modules = {
         AndroidSupportInjectionModule.class,
         MovieAppModule.class,
+        ViewModelModule.class,
         ActivityBindingModule.class})
 @ApplicationScope
 public interface MovieAppComponent extends AndroidInjector<MovieApp> {
@@ -22,7 +23,7 @@ public interface MovieAppComponent extends AndroidInjector<MovieApp> {
     interface Builder {
 
         @BindsInstance
-        MovieAppComponent.Builder application(Application application);
+        MovieAppComponent.Builder application(MovieApp application);
 
         MovieAppComponent build();
     }
