@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.example.jmucientes.popularmovies.adapter.MoviesAdapter;
 import com.example.jmucientes.popularmovies.model.Movie;
-import com.example.jmucientes.popularmovies.model.MoviesViewModel;
 import com.example.jmucientes.popularmovies.presenters.MainActivityPresenter;
 import com.example.jmucientes.popularmovies.view.MainActivityViewBinder;
 
