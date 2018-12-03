@@ -26,6 +26,10 @@ android {
         disable 'GoogleAppIndexingWarning','ObsoleteLintCustomCheck','IconLocation', 'RestrictedApi'
 
     }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
 }
 
 dependencies {
