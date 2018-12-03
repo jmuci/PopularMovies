@@ -1,6 +1,6 @@
 package com.example.jmucientes.popularmovies.di;
 
-import com.example.jmucientes.popularmovies.MainActivity;
+import com.example.jmucientes.popularmovies.view.MainActivity;
 import com.example.jmucientes.popularmovies.adapter.MoviesAdapter;
 import com.example.jmucientes.popularmovies.di.scopes.ActivityScope;
 import com.example.jmucientes.popularmovies.model.Movie;

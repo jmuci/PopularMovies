@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.example.jmucientes.popularmovies.MoviesDetailsActivity;
+import com.example.jmucientes.popularmovies.view.MoviesDetailsActivity;
 import com.example.jmucientes.popularmovies.R;
 import com.example.jmucientes.popularmovies.model.Movie;
 import com.example.jmucientes.popularmovies.util.ImageUriUtils;

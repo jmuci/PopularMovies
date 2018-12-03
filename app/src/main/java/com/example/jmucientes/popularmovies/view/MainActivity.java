@@ -1,4 +1,4 @@
-package com.example.jmucientes.popularmovies;
+package com.example.jmucientes.popularmovies.view;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -12,10 +12,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.jmucientes.popularmovies.R;
 import com.example.jmucientes.popularmovies.adapter.MoviesAdapter;
 import com.example.jmucientes.popularmovies.model.Movie;
 import com.example.jmucientes.popularmovies.presenters.MainActivityPresenter;
-import com.example.jmucientes.popularmovies.view.MainActivityViewBinder;
 
 import java.util.List;
 

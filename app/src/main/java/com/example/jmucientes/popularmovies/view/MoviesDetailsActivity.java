@@ -1,4 +1,4 @@
-package com.example.jmucientes.popularmovies;
+package com.example.jmucientes.popularmovies.view;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.example.jmucientes.popularmovies.R;
 import com.example.jmucientes.popularmovies.adapter.MoviesAdapter;
 import com.example.jmucientes.popularmovies.adapter.ReviewsAdapter;
 import com.example.jmucientes.popularmovies.adapter.TrailersAdapter;
