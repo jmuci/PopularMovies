@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.example.jmucientes.popularmovies.MovieApp;
 import com.example.jmucientes.popularmovies.db.MovieDataBase;
+import com.example.jmucientes.popularmovies.db.dao.MovieDAO;
 import com.example.jmucientes.popularmovies.di.scopes.ApplicationScope;
 
 import dagger.Module;
@@ -15,6 +16,12 @@ public class PersistenceModule {
 
     public static final String FAVS_MOVIE_DB = "favs-movie.db";
     private static MovieDataBase INSTANCE;
+
+    @Provides
+    @ApplicationScope
+    MovieDAO providesMovieDAO(MovieDataBase movieDataBase) {
+        return movieDataBase.movieDAO();
+    }
 
     @Provides
     @ApplicationScope

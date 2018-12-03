@@ -15,7 +15,7 @@ import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 public interface MovieDAO {
 
     @Insert(onConflict = REPLACE)
-    long saveMovieToDB(Movie movie);
+    long insertMovie(Movie movie);
 
     @Query("SELECT * FROM Movie WHERE id = :movieId")
     LiveData<Movie> getMovieById(int movieId);
