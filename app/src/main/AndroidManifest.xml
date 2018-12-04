@@ -13,6 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".view.MainActivity">
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,6 +22,7 @@
         </activity>
         <activity android:name=".view.MoviesDetailsActivity"
             android:launchMode="singleTask"
+            android:parentActivityName=".view.MainActivity"
             android:theme="@style/AppThemeNoActionBar"/>
     </application>
 
