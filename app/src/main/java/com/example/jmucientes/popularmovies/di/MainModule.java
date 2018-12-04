@@ -1,11 +1,11 @@
 package com.example.jmucientes.popularmovies.di;
 
-import com.example.jmucientes.popularmovies.view.MainActivity;
 import com.example.jmucientes.popularmovies.adapter.MoviesAdapter;
 import com.example.jmucientes.popularmovies.di.scopes.ActivityScope;
 import com.example.jmucientes.popularmovies.model.Movie;
 import com.example.jmucientes.popularmovies.network.MoviesWebService;
 import com.example.jmucientes.popularmovies.presenters.MainActivityPresenter;
+import com.example.jmucientes.popularmovies.view.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;

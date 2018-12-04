@@ -1,12 +1,10 @@
 package com.example.jmucientes.popularmovies.view;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.NestedScrollView;
@@ -112,7 +110,6 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity implements Mo
         setUpToolBar();
         appBarLayout.setMinimumHeight(R.dimen.event_entity_appbar_height);
 
-        mMovieViewModel.getIsFavoriteForCurrentMovie(mMovie.getId()).observe(this, this::setIsFavoriteButtonStatus);
         mMovieViewModel.getFavoriteMovies().observe(this,
                 movies -> setIsFavoriteButtonStatus(isSavedToFavorites(movies, mMovie.getId())));
 
@@ -172,9 +169,6 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity implements Mo
                     .error(R.drawable.baseline_error_black_36)
                     .placeholder(R.drawable.baseline_cloud_download_black_36)
                     .into(mPosterView);
-
-            // Update FAB Save to Favorites Button State
-            setIsFavoriteButtonStatus(mMovieViewModel.isSavedToFavorites(mMovie.getId()));
         }
     }
 

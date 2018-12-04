@@ -1,11 +1,11 @@
 package com.example.jmucientes.popularmovies.di;
 
-import com.example.jmucientes.popularmovies.view.MoviesDetailsActivity;
 import com.example.jmucientes.popularmovies.adapter.ReviewsAdapter;
 import com.example.jmucientes.popularmovies.adapter.TrailersAdapter;
 import com.example.jmucientes.popularmovies.di.scopes.ActivityScope;
 import com.example.jmucientes.popularmovies.network.MoviesWebService;
 import com.example.jmucientes.popularmovies.presenters.MovieDetailsPresenter;
+import com.example.jmucientes.popularmovies.view.MoviesDetailsActivity;
 
 import dagger.Module;
 import dagger.Provides;

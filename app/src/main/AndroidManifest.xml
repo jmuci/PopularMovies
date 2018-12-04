@@ -20,6 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.MoviesDetailsActivity"
+            android:launchMode="singleTask"
             android:theme="@style/AppThemeNoActionBar"/>
     </application>
 

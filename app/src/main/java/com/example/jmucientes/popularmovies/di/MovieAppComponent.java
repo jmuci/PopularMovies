@@ -1,9 +1,6 @@
 package com.example.jmucientes.popularmovies.di;
 
-import android.app.Application;
-
 import com.example.jmucientes.popularmovies.MovieApp;
-import com.example.jmucientes.popularmovies.di.scopes.ActivityScope;
 import com.example.jmucientes.popularmovies.di.scopes.ApplicationScope;
 
 import dagger.BindsInstance;
