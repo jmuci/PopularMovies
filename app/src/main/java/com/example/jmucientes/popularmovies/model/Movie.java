@@ -1,5 +1,8 @@
 package com.example.jmucientes.popularmovies.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.io.Serializable;
@@ -9,6 +12,7 @@ import java.io.Serializable;
  * NOTE that implements Serializable, but it should actually implement Parcelable
  * for performance reasons when Bundling a Movie object to pass it to the DetailsActivity.
  */
+@Entity(tableName = "Movie")
 public class Movie implements Serializable {
 
     public Movie(String vote_average, String backdrop_path, int id, String title, String overview, String original_language, String release_date, String vote_count, String poster_path) {
@@ -23,15 +27,17 @@ public class Movie implements Serializable {
         this.poster_path = poster_path;
     }
 
+    @PrimaryKey
+    @NonNull
+    private int id;
+
     public String getImageUri() {
         return poster_path;
     }
-
     private String vote_average;
 
     private String backdrop_path;
 
-    private int id;
 
     private String title;
 

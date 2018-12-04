@@ -4,7 +4,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.jmucientes.popularmovies.model.Review;
-import com.example.jmucientes.popularmovies.model.VideoTrailer;
 
 import org.json.JSONArray;
 import org.json.JSONException;

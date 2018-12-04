@@ -6,7 +6,7 @@ import com.example.jmucientes.popularmovies.network.MoviesWebService;
 import dagger.Module;
 import dagger.Provides;
 
-@Module
+@Module(includes = PersistenceModule.class)
 public abstract class MovieAppModule {
 
     @Provides

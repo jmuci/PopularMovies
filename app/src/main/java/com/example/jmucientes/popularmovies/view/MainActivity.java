@@ -1,5 +1,7 @@
-package com.example.jmucientes.popularmovies;
+package com.example.jmucientes.popularmovies.view;
 
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -11,12 +13,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.jmucientes.popularmovies.R;
 import com.example.jmucientes.popularmovies.adapter.MoviesAdapter;
 import com.example.jmucientes.popularmovies.model.Movie;
-import com.example.jmucientes.popularmovies.model.MoviesViewModel;
 import com.example.jmucientes.popularmovies.presenters.MainActivityPresenter;
-import com.example.jmucientes.popularmovies.view.MainActivityViewBinder;
+import com.example.jmucientes.popularmovies.viewmodel.MovieViewModel;
 
 import java.util.List;
 
@@ -25,6 +28,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.DaggerAppCompatActivity;
+
+import static com.example.jmucientes.popularmovies.presenters.MainActivityPresenter.MY_FAVORITE_MOVIES_TITLE;
 
 // TODO (Opt) Introduce Dagger
 // TODO (Opt) Load more films on Scroll https://medium.com/@programmerasi/how-to-implement-load-more-in-recyclerview-3c6358297f4
@@ -54,14 +59,19 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     MainActivityPresenter mMainActivityPresenter;
     @Inject
     List<Movie> mMovieList; //Initialized Empty //TODO Remove this list.
+    @Inject
+    ViewModelProvider.Factory viewModelFactory;
 
     private String mToolBarTilte;
+    private MovieViewModel mMovieViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        mMovieViewModel = ViewModelProviders.of(this, viewModelFactory).get(MovieViewModel.class);
 
         setUpRecyclerView();
 
@@ -75,6 +85,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
 
         if (savedInstanceState != null) {
             String title = savedInstanceState.getString(TOOLBAR_TITLE);
+            Log.d(TAG, "Recovering previous Toolbar Tile and sort state: " + title);
             setToolBarTitle(title);
             mMainActivityPresenter.setCurrentSortOptionBasedOnTitle(title);
         }
@@ -85,8 +96,8 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
     protected void onResume() {
         super.onResume();
         if (mMainActivityPresenter.getCurrentSortOption().equals(MainActivityPresenter.SHOW_FAVORITES)) {
-            boolean success = mMainActivityPresenter.showOnlyFavoriteMovies();
-            if (!success) {
+            if (mAdapter.getItemCount() <= 0) {
+                Log.d(TAG, "No favs to show. Fallback on Top results ");
                 mAdapter.clearDataSetWithoutNotifyDataSetChanged();
                 mMainActivityPresenter.requestTopRatedMoviesFromTheMovieDB();
             }
@@ -133,14 +144,32 @@ public class MainActivity extends DaggerAppCompatActivity implements MainActivit
         }
 
         if (id == R.id.order_favorites) {
-            if (!MainActivityPresenter.SHOW_FAVORITES.equals(mMainActivityPresenter.getCurrentSortOption())) {
-                mMainActivityPresenter.showOnlyFavoriteMovies();
+            if (!isCurrentlyDisplayingFavorites()) {
+                //mMainActivityPresenter.showOnlyFavoriteMovies();
+                mMovieViewModel.getFavoriteMovies().observe(this, this::showOnlyFavoriteMovies);
             }
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    private void showOnlyFavoriteMovies(List<Movie> movies) {
+        if (movies.size() > 0) {
+            updateAdapterContent(movies, false);
+            mMainActivityPresenter.setCurrentSortOption(MainActivityPresenter.SHOW_FAVORITES);
+            setToolBarTitle(MY_FAVORITE_MOVIES_TITLE);
+        } else {
+            Toast.makeText(this, "No movies saved in favorites yet. ", Toast.LENGTH_LONG).show();
+            if (isCurrentlyDisplayingFavorites()) {
+                mAdapter.clearDataSetWithoutNotifyDataSetChanged();
+                mMainActivityPresenter.requestTopRatedMoviesFromTheMovieDB();
+            }
+        }
+    }
+
+    private boolean isCurrentlyDisplayingFavorites() {
+        return MainActivityPresenter.SHOW_FAVORITES.equals(mMainActivityPresenter.getCurrentSortOption());
+    }
     /**
      * View Binder Implementation
      * ------------------------------

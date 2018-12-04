@@ -1,8 +1,8 @@
 package com.example.jmucientes.popularmovies.di;
 
-import com.example.jmucientes.popularmovies.MainActivity;
-import com.example.jmucientes.popularmovies.MoviesDetailsActivity;
 import com.example.jmucientes.popularmovies.di.scopes.ActivityScope;
+import com.example.jmucientes.popularmovies.view.MainActivity;
+import com.example.jmucientes.popularmovies.view.MoviesDetailsActivity;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;

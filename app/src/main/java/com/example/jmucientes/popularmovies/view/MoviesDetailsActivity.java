@@ -1,19 +1,23 @@
-package com.example.jmucientes.popularmovies;
+package com.example.jmucientes.popularmovies.view;
 
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.support.design.widget.AppBarLayout;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.example.jmucientes.popularmovies.R;
 import com.example.jmucientes.popularmovies.adapter.MoviesAdapter;
 import com.example.jmucientes.popularmovies.adapter.ReviewsAdapter;
 import com.example.jmucientes.popularmovies.adapter.TrailersAdapter;
@@ -22,7 +26,7 @@ import com.example.jmucientes.popularmovies.model.Review;
 import com.example.jmucientes.popularmovies.model.VideoTrailer;
 import com.example.jmucientes.popularmovies.presenters.MovieDetailsPresenter;
 import com.example.jmucientes.popularmovies.util.ImageUriUtils;
-import com.example.jmucientes.popularmovies.view.MovieDetailsViewBinder;
+import com.example.jmucientes.popularmovies.viewmodel.MovieViewModel;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -42,6 +46,7 @@ import dagger.android.support.DaggerAppCompatActivity;
 public class MoviesDetailsActivity extends DaggerAppCompatActivity implements MovieDetailsViewBinder {
 
 
+    private static final String TAG = MoviesDetailsActivity.class.getName();
     @BindView(R.id.collapsing_toolbar_backdrop)
     ImageView mImageBackdropView;
     @BindView(R.id.poster_view)
@@ -77,14 +82,19 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity implements Mo
     TrailersAdapter mTrailersAdapter;
     @Inject
     MovieDetailsPresenter mMovieDetailsPresenter;
+    @Inject
+    ViewModelProvider.Factory viewModelFactory;
 
     private boolean mIsFavorite;
+    private MovieViewModel mMovieViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies_details);
         ButterKnife.bind(this);
+
+        mMovieViewModel = ViewModelProviders.of(this, viewModelFactory).get(MovieViewModel.class);
 
         Intent startingIntent = getIntent();
         if (startingIntent != null && startingIntent.getSerializableExtra(MoviesAdapter.MOVIE_KEY) != null) {
@@ -99,13 +109,29 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity implements Mo
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
         setUpToolBar();
         appBarLayout.setMinimumHeight(R.dimen.event_entity_appbar_height);
-        mFavoriteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mMovieDetailsPresenter.updateIsFavoriteStatus(mMovie);
-                setIsFavoriteButtonStatus(mMovieDetailsPresenter.isMovieFavorite(mMovie.getId()));
+
+        mMovieViewModel.getFavoriteMovies().observe(this,
+                movies -> setIsFavoriteButtonStatus(isSavedToFavorites(movies, mMovie.getId())));
+
+        mFavoriteButton.setOnClickListener(v -> {
+            if (mIsFavorite) {
+                mMovieViewModel.removeMovieFromFavorites(mMovie.getId());
+            } else {
+                mMovieViewModel.saveMovieToFavorites(mMovie);
             }
         });
+    }
+
+    private boolean isSavedToFavorites(List<Movie> movieList, int id) {
+        if (movieList != null) {
+            for (Movie movie : movieList) {
+                if (movie.getId() == id) {
+                    Log.d(TAG, "Found movie in collection! Id: " + id);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void setUpRecyclerView(RecyclerView recyclerView, RecyclerView.Adapter adapter) {
@@ -143,13 +169,11 @@ public class MoviesDetailsActivity extends DaggerAppCompatActivity implements Mo
                     .error(R.drawable.baseline_error_black_36)
                     .placeholder(R.drawable.baseline_cloud_download_black_36)
                     .into(mPosterView);
-
-            // Update FAB Save to Favorites Button State
-            setIsFavoriteButtonStatus(mMovieDetailsPresenter.isMovieFavorite(mMovie.getId()));
         }
     }
 
     private void setIsFavoriteButtonStatus(boolean isFavorite) {
+        mIsFavorite = isFavorite;
         if (isFavorite) {
             mFavoriteButton.setImageResource(R.drawable.baseline_favorite_black_24dp);
         } else {
