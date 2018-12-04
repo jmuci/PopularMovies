@@ -39,6 +39,12 @@ public class MovieRepository {
     }
 
     public void saveMovieToFavorites(final Movie movie) {
+        Log.d(TAG, "Saving Movie to DB. MovieId:  " + movie.getId());
         mExecutors.diskIO().execute(() -> mMovieDAO.insertMovie(movie));
+    }
+
+    public void deleteMovieFromFavorites(int id) {
+        Log.d(TAG, "Deleting Movie from DB. MovieId:  " + id);
+        mExecutors.diskIO().execute(() -> mMovieDAO.deleteMoveFromDB(id));
     }
 }
